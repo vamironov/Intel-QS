@@ -1,8 +1,18 @@
+HOST = $(shell hostname)
+
+ifneq ($(HOST),ccefw-desktop)
 CC = g++
 CC = mpicxx 
 CC = CC -mkl -no-ipo
 CC = mpiicpc 
-
+else
+########### Modified for the ccefw-desktop.jf.intel.com environment ############
+CC = /etc/local/g++-6.2
+CC = /opt/intel/impi_latest/bin64/mpicxx
+CC = CC -mkl -no-ipo
+CC = /opt/intel/impi_latest/bin64/mpiicpc
+################################################################################
+endif
 
 OPTS = -g
 OPTS = -O3
@@ -14,4 +24,12 @@ CFLAGS = ${OPTS} ${DEFS} \
 
 
 CFLAGS += ${OPTFLAGS}  
+
+ifneq ($(HOST),ccefw-desktop)
 INC = -I./ -I../
+else
+########### Modifications to find performance libraries on ccefw-desktop. ######
+INC = -I./ -I../ -I/opt/intel/mkl/include/
+MKLROOT = /opt/intel/mkl/
+################################################################################
+endif
