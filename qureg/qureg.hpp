@@ -219,5 +219,5 @@ using BaseType = typename QbitRegister<Type>::BaseType;
 //
 // Derived class of QbitRegister that allows measurement of qubit gate depth.
 //
-#include "QbitRegisterMetric.h"
+#include "QbitRegisterMetric.hpp"
 
