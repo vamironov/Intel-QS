@@ -149,7 +149,7 @@ class QbitRegister
   void applyPauliSqrtY(unsigned const qubit);
   void applyPauliSqrtZ(unsigned const qubit);
   void applyT(unsigned const qubit);
-  
+  void applyToffoli(unsigned const qubit1, unsigned const qubit2, unsigned const qubit3);
   void applyHadamard(unsigned const qubit);
 
   void applyCRotationX(unsigned const qubit, unsigned const qubit2, BaseType theta);
