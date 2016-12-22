@@ -21,6 +21,7 @@
 #include "util/mpi.hpp"
 #include "util/openmp.hpp"
 #include "util/tinymatrix.hpp"
+#include "QbitRegisterMetric.h"
 #endif
 
 #include <cassert>
