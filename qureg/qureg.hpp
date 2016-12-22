@@ -21,7 +21,6 @@
 #include "util/mpi.hpp"
 #include "util/openmp.hpp"
 #include "util/tinymatrix.hpp"
-#include "QbitRegisterMetric.h"
 #endif
 
 #include <cassert>
@@ -216,4 +215,9 @@ class QbitRegister
 
 template <typename Type>
 using BaseType = typename QbitRegister<Type>::BaseType;
+
+//
+// Derived class of QbitRegister that allows measurement of qubit gate depth.
+//
+#include "QbitRegisterMetric.h"
 
