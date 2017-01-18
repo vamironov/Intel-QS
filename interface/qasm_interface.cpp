@@ -31,17 +31,17 @@
 
 using namespace std;
 
-unsigned long unk(void *args) {
+unsigned long unk(string args) {
     cout << "Unrecognized token." << endl;
     return 1;
 }
 
-unsigned long hadamard(void *args) {
-    cout << "Hadamard"<<endl;
+unsigned long hadamard(string args) {
+    cout << "Hadamard"<< " [" << args << "]" <<endl;
     return 1;
 }
 
-unordered_map<string, function<long(void*)>> qufun_table = {\
+unordered_map<string, function<long(string)>> qufun_table = {\
                                                 {"QMalloc", unk},
                                                 {"H", hadamard},
                                                 {"CNOT", unk}};
@@ -62,10 +62,12 @@ int main(int argc, char*argv[]) {
         getline(cin,line);
 
         if(line.length() > 1) {
-            token = line.substr(0,line.find_first_of(' '));
+            int token_end = line.find_first_of(' ');
+            token = line.substr(0,token_end);
             if(!token.empty()) {
-               function<long(void*)> fun = qufun_table[token];
-               if(fun) fun(0);
+               function<long(string)> func = qufun_table[token];
+               if(func) 
+                  func(line.substr(token_end+1,line.length()));
             }
         } else
           break;
