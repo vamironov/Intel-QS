@@ -31,20 +31,48 @@
 
 using namespace std;
 
+
+using Type = ComplexSP;
+QbitRegister<Type> *psi1;
+
+
 unsigned long unk(string args) {
     cout << "Unrecognized token." << endl;
     return 1;
 }
 
+
 unsigned long hadamard(string args) {
     cout << "Hadamard"<< " [" << args << "]" <<endl;
-    return 1;
+    return 0;
 }
 
+unsigned long qumalloc(string args) {
+    cout << "qumalloc ("<<args<<")"<<endl;
+    return 0;
+}
+
+unsigned long qufree(string args) {
+    cout << "qufree"<<endl;
+    return 0;
+}
+
+
 unordered_map<string, function<long(string)>> qufun_table = {\
-                                                {"QMalloc", unk},
+                                                {".malloc", qumalloc},
+                                                {".free", qufree},
                                                 {"H", hadamard},
-                                                {"CNOT", unk}};
+                                                {"CNOT", unk},
+                                                {"PrepZ",unk},
+                                                {"T", unk},
+                                                {"X", unk},
+                                                {"Tdag", unk},
+                                                {"T", unk},
+                                                {"T", unk},
+                                                {"T", unk},
+};
+
+
 
 int main(int argc, char*argv[]) {
     openqu::mpi::Environment env(argc, argv);

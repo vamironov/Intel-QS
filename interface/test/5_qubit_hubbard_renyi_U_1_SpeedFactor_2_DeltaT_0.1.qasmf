@@ -1,4 +1,4 @@
-QMalloc 10
+.malloc 5
 qubit qWfns0
 qubit qWfns1
 qubit qWfns2
@@ -7245,5 +7245,5 @@ CNOT qTop0,qWfns0
 H qWfns2
 H qTop0
 MeasZ qTop0
-QFree
+.free
 
