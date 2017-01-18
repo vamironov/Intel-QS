@@ -20,6 +20,8 @@
 //------------------------------------------------------------------------------
 #include <iostream>
 #include <fstream>
+#include <unordered_map>
+#include <functional>
 
 #if !defined(STANDALONE)
 #include "openqu/engines/distrwavefunctionsimulator/qHiPSTER_backend/src/qureg.hpp"
@@ -29,6 +31,20 @@
 
 using namespace std;
 
+unsigned long unk(void *args) {
+    cout << "Unrecognized token." << endl;
+    return 1;
+}
+
+unsigned long hadamard(void *args) {
+    cout << "Hadamard"<<endl;
+    return 1;
+}
+
+unordered_map<string, function<long(void*)>> qufun_table = {\
+                                                {"QMalloc", unk},
+                                                {"H", hadamard},
+                                                {"CNOT", unk}};
 
 int main(int argc, char*argv[]) {
     openqu::mpi::Environment env(argc, argv);
@@ -47,8 +63,9 @@ int main(int argc, char*argv[]) {
 
         if(line.length() > 1) {
             token = line.substr(0,line.find_first_of(' '));
-            if(token.length() > 1) {
-                cout << token << ',';
+            if(!token.empty()) {
+               function<long(void*)> fun = qufun_table[token];
+               if(fun) fun(0);
             }
         } else
           break;
