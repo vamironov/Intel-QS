@@ -40,7 +40,6 @@ bool fPsiAllocated = false;
 
 
 unsigned long unk(string args) {
-    cout << "Unrecognized token." << endl;
     return 1;
 }
 
@@ -144,13 +143,20 @@ int main(int argc, char*argv[]) {
     while(true) {
         getline(cin,line);
 
-        if(line.length() > 1) {
+        if(line.length() >= 1) {
             int token_end = line.find_first_of(' ');
+            unsigned long result = 1;
+
             token = line.substr(0,token_end);
             if(!token.empty()) {
                function<long(string)> func = qufun_table[token];
-               if(func) 
-                  func(line.substr(token_end+1,line.length()));
+               if(func) {
+                  result = func(line.substr(token_end+1,line.length()));
+               }
+
+               if (result > 0) {
+                   cerr << "Qasm Op failed - ["<<token<<"]"<<endl;
+               }
             }
         } else
           break;
