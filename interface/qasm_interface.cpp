@@ -33,6 +33,7 @@
 using namespace std;
 
 
+// Global variables related to Psi-function .malloc/.free routines.
 using Type = ComplexSP;
 QbitRegister<Type> *psi1 = nullptr;
 bool fPsiAllocated = false;
@@ -93,9 +94,23 @@ unsigned long qumalloc(string args) {
     return 1;
 }
 
+//
+// Free any qubit allocation.
+//
 unsigned long qufree(string args) {
-    cout << "qufree"<<endl;
-    return 0;
+
+    if (fPsiAllocated) {
+        delete psi1;
+        psi1 = nullptr;
+        fPsiAllocated = false;
+
+        cout << "Qubits successfully free."<<endl;
+        return 0;
+    }
+
+    cerr << "Harmless attempt to .free before .malloc. Nothing done."<<endl;
+
+    return 1;
 }
 
 
@@ -125,7 +140,6 @@ int main(int argc, char*argv[]) {
 
     int myid = env.rank();
     using Type = ComplexSP;
-    QbitRegister<Type> *psi1;
 
     while(true) {
         getline(cin,line);
