@@ -44,11 +44,52 @@ unsigned long unk(string args) {
 }
 
 
-unsigned long hadamard(string args) {
-    cout << "Hadamard"<< " [" << args << "]" <<endl;
+unsigned long S_handler(string args) {
+    cout << "S"<< " [" << args << "]" <<endl;
     return 0;
 }
 
+
+unsigned long X_handler(string args) {
+    cout << "X"<< " [" << args << "]" <<endl;
+    return 0;
+}
+
+
+unsigned long T_handler(string args) {
+    cout << "T"<< " [" << args << "]" <<endl;
+    return 0;
+}
+
+
+unsigned long Tdag_handler(string args) {
+    cout << "Tdag"<< " [" << args << "]" <<endl;
+    return 0;
+}
+
+
+unsigned long CNOT_handler(string args) {
+    cout << "CNOT"<< " [" << args << "]" <<endl;
+    return 0;
+}
+
+
+unsigned long H_handler(string args) {
+    cout << "H"<< " [" << args << "]" <<endl;
+    return 0;
+}
+
+
+unsigned long MeasZ_handler(string args) {
+    cout << "MeasZ"<< " [" << args << "]" <<endl;
+    return 0;
+}
+
+
+unsigned long PrepZ_handler(string args) {
+    cout << "PrepZ"<< " [" << args << "]" <<endl;
+    return 0;
+}
 
 //
 // Allocate a qubit wave function in qHiPSTER.
@@ -116,12 +157,16 @@ unsigned long qufree(string args) {
 unordered_map<string, function<long(string)>> qufun_table = {\
                                                 {".malloc", qumalloc},
                                                 {".free", qufree},
-                                                {"H", hadamard},
-                                                {"CNOT", unk},
-                                                {"PrepZ",unk},
+                                                {"H", H_handler},
+                                                {"CNOT", CNOT_handler},
+                                                {"PrepZ",PrepZ_handler},
+                                                {"T", T_handler},
+                                                {"X", X_handler},
+                                                {"Tdag", Tdag_handler},
+                                                {"S", S_handler},
+                                                {"MeasZ", MeasZ_handler},
                                                 {"T", unk},
-                                                {"X", unk},
-                                                {"Tdag", unk},
+                                                {"T", unk},
                                                 {"T", unk},
                                                 {"T", unk},
                                                 {"T", unk},
