@@ -22,6 +22,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <functional>
+#include <stdexcept>
 
 #if !defined(STANDALONE)
 #include "openqu/engines/distrwavefunctionsimulator/qHiPSTER_backend/src/qureg.hpp"
@@ -33,7 +34,8 @@ using namespace std;
 
 
 using Type = ComplexSP;
-QbitRegister<Type> *psi1;
+QbitRegister<Type> *psi1 = nullptr;
+bool fPsiAllocated = false;
 
 
 unsigned long unk(string args) {
@@ -47,9 +49,48 @@ unsigned long hadamard(string args) {
     return 0;
 }
 
+
+//
+// Allocate a qubit wave function in qHiPSTER.
+//
 unsigned long qumalloc(string args) {
-    cout << "qumalloc ("<<args<<")"<<endl;
-    return 0;
+
+    int num_qubits = 0;
+
+    // Check for an attempt at a memory leak.
+    if (fPsiAllocated) {
+        cerr << ".malloc called before .free - memory leak detected."<<endl;
+        return 1;
+    }
+
+    // Convert the argument to an integer number of qubits.
+    try
+    {
+        num_qubits = stoi(args,nullptr,10);
+
+    } catch(const invalid_argument& inv_arg) {
+        cerr << ".malloc (size) - size parameter was not an integer."<<endl;
+    } catch(const out_of_range& oor_arg) {
+        cerr << ".malloc (size) - size parameter was too large to fit in an integer."<<endl;
+    }
+
+    // Ensure wavefunction register is in the allowed range.
+    if ((num_qubits > 0) && (num_qubits <= 43)) {
+        psi1 = new QbitRegister<Type>(num_qubits);
+
+        if (psi1) {
+            fPsiAllocated = true;
+            cout << "Allocated ["<<num_qubits<<"] qubits."<<endl;
+            return 0;
+        } 
+    }
+    else 
+    {
+        cerr << ".malloc (size) - allocations in the range from 1..43 only."<<endl;
+    }
+ 
+
+    return 1;
 }
 
 unsigned long qufree(string args) {
