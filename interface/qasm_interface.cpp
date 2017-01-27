@@ -77,24 +77,28 @@ unsigned long unk(string args) {
 
 unsigned long S_handler(string args) {
     cout << "S"<< " [" << args << "]" <<endl;
+    psi1->applyPauliSqrtZ(query_qubit_id(args));
     return 0;
 }
 
 
 unsigned long X_handler(string args) {
     cout << "X"<< " [" << args << "]" <<endl;
+    psi1->applyPauliX(query_qubit_id(args));
     return 0;
 }
 
 
 unsigned long T_handler(string args) {
     cout << "T"<< " [" << args << "]" <<endl;
+    psi1->applyT(query_qubit_id(args));
     return 0;
 }
 
 
 unsigned long Tdag_handler(string args) {
     cout << "Tdag"<< " [" << args << "]" <<endl;
+    psi1->applyRotationZ(query_qubit_id(args),TDAG_THETA);
     return 0;
 }
 
