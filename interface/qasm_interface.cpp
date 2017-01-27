@@ -34,7 +34,7 @@ using namespace std;
 
 
 // Global variables related to Psi-function .malloc/.free routines.
-using Type = ComplexSP;
+using Type = ComplexDP;
 QbitRegister<Type> *psi1 = nullptr;
 bool fPsiAllocated = false;
 
@@ -65,7 +65,7 @@ int query_qubit_id(string qubit_name) {
    }
 
    // Translate the Hash encoded ID to a qHiPSTER API relevant ID and return it.
-   cout << "Assigned id: "<<qubit_ref<<endl;
+   //cout << "Assigned id: "<<qubit_ref<<endl;
    return (qubit_ref - QUBIT_ID_BASE); 
 }
 
@@ -104,7 +104,15 @@ unsigned long Tdag_handler(string args) {
 
 
 unsigned long CNOT_handler(string args) {
+    int qubit1,
+        qubit2;
+    int token_end = args.find_first_of(',');
+
+    qubit1 = query_qubit_id(args.substr(0,token_end));
+    qubit2 = query_qubit_id(args.substr(token_end+1,args.length()));
+
     cout << "CNOT"<< " [" << args << "]" <<endl;
+    psi1->applyCPauliX(qubit1,qubit2);
     return 0;
 }
 
@@ -117,7 +125,12 @@ unsigned long H_handler(string args) {
 
 
 unsigned long MeasZ_handler(string args) {
+    using Type = ComplexDP;
+    Type measurement = 0.0;
+    
     cout << "MeasZ"<< " [" << args << "]" <<endl;
+    measurement = psi1->getProbability(query_qubit_id(args));
+    cout << measurement << endl;
     return 0;
 }
 
@@ -156,6 +169,7 @@ unsigned long qumalloc(string args) {
         psi1 = new QbitRegister<Type>(num_qubits);
 
         if (psi1) {
+            (*psi1)[0] = 1;
             fPsiAllocated = true;
             cout << "Allocated ["<<num_qubits<<"] qubits."<<endl;
             return 0;
@@ -222,7 +236,7 @@ int main(int argc, char*argv[]) {
         return 0;
 
     int myid = env.rank();
-    using Type = ComplexSP;
+    using Type = ComplexDP;
 
     while(true) {
         getline(cin,line);
