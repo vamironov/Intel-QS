@@ -1,3 +1,4 @@
+.malloc 25
 qubit scratch0a
 qubit scratch1a
 qubit scratch2a
