@@ -39,6 +39,37 @@ QbitRegister<Type> *psi1 = nullptr;
 bool fPsiAllocated = false;
 
 
+// Constant defining the rotational angle of a T-dagger gate. Basically, -(pi/4).
+#define TDAG_THETA -0.785398163397448
+
+
+#define QUBIT_ID_BASE 100
+// Qubits in qHiPSTER are indexed by an integer value that represents their position
+// in the wavefunction parameter order. Here we have a Hash map that maps the string
+// identifier in QASM to an integer ID representing the qubit in the wavefunction.
+unordered_map<string,int> qubit_id_table = {};
+int next_qubit_id = QUBIT_ID_BASE;
+
+// Query the qubit_id_table for the qubit identifier. Create and assign the qubit
+// identifier if it is not found. Finally, return the identifier.
+int query_qubit_id(string qubit_name) {
+
+   // Retrieve the qubit_id from the qubit_id_table.
+   int& qubit_ref = qubit_id_table[qubit_name];
+
+   // Insert a new qubit_id in the Hash table if we did not get back a valid one.
+   if(qubit_ref < QUBIT_ID_BASE)
+   {
+      qubit_ref = next_qubit_id;
+      next_qubit_id++;
+   }
+
+   // Translate the Hash encoded ID to a qHiPSTER API relevant ID and return it.
+   cout << "Assigned id: "<<qubit_ref<<endl;
+   return (qubit_ref - QUBIT_ID_BASE); 
+}
+
+
 unsigned long unk(string args) {
     return 1;
 }
@@ -76,6 +107,7 @@ unsigned long CNOT_handler(string args) {
 
 unsigned long H_handler(string args) {
     cout << "H"<< " [" << args << "]" <<endl;
+    psi1->applyHadamard(query_qubit_id(args));
     return 0;
 }
 
@@ -154,6 +186,10 @@ unsigned long qufree(string args) {
 }
 
 
+// 
+// Hash table containing the QASM operation string and the function to call to
+// handle the operation with the qHiPSTER simulation.
+//
 unordered_map<string, function<long(string)>> qufun_table = {\
                                                 {".malloc", qumalloc},
                                                 {".free", qufree},
@@ -171,7 +207,6 @@ unordered_map<string, function<long(string)>> qufun_table = {\
                                                 {"T", unk},
                                                 {"T", unk},
 };
-
 
 
 int main(int argc, char*argv[]) {
