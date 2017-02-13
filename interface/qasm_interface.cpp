@@ -29,6 +29,7 @@
 #else
 #include "qureg/qureg.hpp"
 #endif
+#include "qhipster_api.h"
 
 using namespace std;
 
@@ -204,6 +205,15 @@ unsigned long qufree(string args) {
 }
 
 
+//
+// Print out the QASM interface version string. 
+//
+unsigned long quiversion(string args) {
+
+    cout << INTERFACE_VERSION_STRING << endl;
+
+    return 0;
+}
 // 
 // Hash table containing the QASM operation string and the function to call to
 // handle the operation with the qHiPSTER simulation.
@@ -211,6 +221,7 @@ unsigned long qufree(string args) {
 unordered_map<string, function<long(string)>> qufun_table = {\
                                                 {".malloc", qumalloc},
                                                 {".free", qufree},
+                                                {".iversion",quiversion},
                                                 {"H", H_handler},
                                                 {"CNOT", CNOT_handler},
                                                 {"PrepZ",PrepZ_handler},
