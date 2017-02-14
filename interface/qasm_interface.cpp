@@ -28,6 +28,7 @@
 #include "openqu/engines/distrwavefunctionsimulator/qHiPSTER_backend/src/qureg.hpp"
 #else
 #include "qureg/qureg.hpp"
+#include "qureg/qureg_version.hpp"
 #endif
 #include "qhipster_api.h"
 
@@ -214,7 +215,18 @@ unsigned long quiversion(string args) {
 
     return 0;
 }
+
 // 
+//
+// Print out the qHiPSTER version string. 
+//
+unsigned long quversion(string args) {
+
+    cout << get_qhipster_version() << endl;
+
+    return 0;
+}
+
 // Hash table containing the QASM operation string and the function to call to
 // handle the operation with the qHiPSTER simulation.
 //
@@ -222,6 +234,7 @@ unordered_map<string, function<long(string)>> qufun_table = {\
                                                 {".malloc", qumalloc},
                                                 {".free", qufree},
                                                 {".iversion",quiversion},
+                                                {".version",quversion},
                                                 {"H", H_handler},
                                                 {"CNOT", CNOT_handler},
                                                 {"PrepZ",PrepZ_handler},

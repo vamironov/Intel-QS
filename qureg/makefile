@@ -41,6 +41,7 @@ clean:
 
 qureg_utils.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/timer.hpp
 qureg_utils.o: ../util/mpi.hpp ../util/prng_engine.hpp
+qureg_version.o: qureg_version.hpp 
 qureg_applyctrl1qubitgate.o: qureg.hpp permute.hpp ../util/utils.hpp
 qureg_applyctrl1qubitgate.o: ../util/timer.hpp ../util/mpi.hpp
 qureg_applyctrl1qubitgate.o: ../util/prng_engine.hpp highperfkernels.hpp
