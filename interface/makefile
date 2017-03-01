@@ -23,7 +23,7 @@ include ../make.inc
 
 LDFLAGS =   -L${MKLROOT}/lib/intel64 -lmkl_cdft_core -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lmkl_blacs_intelmpi_ilp64 -lpthread
 
-OBJS = qasm_interface.o interface_api_qubitid.o
+OBJS = qasm_interface.o interface_api_qubitid.o interface_api_version.o
 
 #LDFLAGS = -L${MKLROOT}/lib/intel64 -lmkl_cdft_core -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lmkl_blacs_intelmpi_lp64 -lpthread \
 
@@ -34,6 +34,10 @@ $(EXEC): makefile ${OBJS}
 
 interface_api_qubitid.o: interface_api_qubitid.h interface_api_qubitid.cpp makefile
 	$(CC) ${CFLAGS} ${INC} -c interface_api_qubitid.cpp
+
+
+interface_api_version.o: interface_api_version.h interface_api_version.cpp makefile
+	$(CC) ${CFLAGS} ${INC} -c interface_api_version.cpp
 
 qasm_interface.o: qasm_interface.cpp makefile
 	$(CC) ${CFLAGS} ${INC} -c qasm_interface.cpp

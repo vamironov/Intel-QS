@@ -28,10 +28,10 @@
 #include "openqu/engines/distrwavefunctionsimulator/qHiPSTER_backend/src/qureg.hpp"
 #else
 #include "qureg/qureg.hpp"
-#include "qureg/qureg_version.hpp"
 #endif
 #include "qhipster_api.h"
 #include "interface_api_qubitid.h"
+#include "interface_api_version.h"
 
 using namespace std;
 
@@ -180,27 +180,6 @@ unsigned long qufree(string args) {
     return 1;
 }
 
-
-//
-// Print out the QASM interface version string. 
-//
-unsigned long quiversion(string args) {
-
-    cout << INTERFACE_VERSION_STRING << endl;
-
-    return 0;
-}
-
-// 
-//
-// Print out the qHiPSTER version string. 
-//
-unsigned long quversion(string args) {
-
-    cout << get_qhipster_version() << endl;
-
-    return 0;
-}
 
 // Hash table containing the QASM operation string and the function to call to
 // handle the operation with the qHiPSTER simulation.
