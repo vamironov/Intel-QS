@@ -39,7 +39,8 @@ qasm_interface.o: qasm_interface.cpp makefile
 	$(CC) ${CFLAGS} ${INC} -c qasm_interface.cpp
 
 clean:
-	rm -f *.o *.s *.d *~ 
+	rm -f *.o *.s *.d *~
+	rm -f $(EXEC)
 
 depend:
 	makedepend -Y ${SRC} ${INC}
