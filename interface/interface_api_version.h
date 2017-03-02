@@ -33,6 +33,8 @@
  * that was linked into the interface and in use.
  */
 
+#define INTERFACE_VERSION_STRING "RC-1.1.0"
+
 /**
  * Print out the QASM interface version string. The format will be 
  * major.minor.revision.

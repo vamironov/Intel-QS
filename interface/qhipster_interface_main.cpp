@@ -25,7 +25,6 @@
 #include <stdexcept>
 
 #include "qureg/qureg.hpp"
-#include "qhipster_api.h"
 #include "interface_api_qasm.h"
 
 using namespace std;

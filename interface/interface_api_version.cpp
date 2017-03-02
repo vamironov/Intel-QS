@@ -21,7 +21,7 @@
 #include <iostream>
 
 #include "qureg/qureg_version.hpp"
-#include "qhipster_api.h"
+#include "interface_api_version.h"
 
 
 using namespace std;

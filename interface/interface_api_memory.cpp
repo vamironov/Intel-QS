@@ -22,7 +22,6 @@
 #include <stdexcept>
 
 #include "qureg/qureg.hpp"
-#include "qhipster_api.h"
 
 using namespace std;
 
