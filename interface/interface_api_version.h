@@ -35,7 +35,7 @@
 
 /**
  * Print out the QASM interface version string. The format will be 
- * #major.#minor.#revision.
+ * major.minor.revision.
  * @param args Unused.
  * @return 0.
  */
@@ -44,7 +44,7 @@ unsigned long quiversion(std::string args);
 
 /**
  * Print out the qHiPSTER library version string. The format will be 
- * #major.#minor.#revision.
+ * major.minor.revision.
  * @param args Unused.
  * @return 0.
  */
