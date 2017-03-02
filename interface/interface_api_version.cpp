@@ -27,11 +27,6 @@
 using namespace std;
 
 
-/**
- * Print to StdOut the version string for the QASM Interface. 
- * 	@param args Unused. 
- * 	@return 0
- */
 unsigned long quiversion(string args) {
 
     cout << INTERFACE_VERSION_STRING << endl;
@@ -40,11 +35,6 @@ unsigned long quiversion(string args) {
 }
 
 
-/**
- * Print to StdOut the version string of the qHiPSTER lib used by the interface. 
- * 	@param args Unused.
- * 	@return 0
- */
 unsigned long quversion(string args) {
 
     cout << get_qhipster_version() << endl;

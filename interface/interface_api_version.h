@@ -21,8 +21,33 @@
 #pragma once
 
 /**
- * Functions to dump the version string of qHiPSTER and of the QASM Interface.
+ * \addtogroup interface
+ * @{
+ */
+
+/**
+ * @file interface_api_version.h
+ *
+ * This header file contains functions for reporting the version of both the
+ * QASM interface to qHiPSTER as well as the version of the qHiPSTER library
+ * that was linked into the interface and in use.
+ */
+
+/**
+ * Print out the QASM interface version string. The format will be 
+ * #major.#minor.#revision.
+ * @param args Unused.
+ * @return 0.
  */
 unsigned long quiversion(std::string args);
+
+
+/**
+ * Print out the qHiPSTER library version string. The format will be 
+ * #major.#minor.#revision.
+ * @param args Unused.
+ * @return 0.
+ */
 unsigned long quversion(std::string args);
 
+/** @} */
