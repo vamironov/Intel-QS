@@ -22,11 +22,14 @@
 
 using namespace std;
 
-// Qubits are assigned a unique identifier that starts from this base value.
+/** Qubits are assigned a unique identifier that starts from this base value. */
 #define QUBIT_ID_BASE 100
 
-
 /**
+ * @file interface_api_qubitid.cpp
+ *
+ * This file implements unique qubit id assignment and query operations.
+ *
  * Each QASM instruction that comes into the qHiPSTER QASM interface has a
  * unique identifier string for the operand:
  *
@@ -59,12 +62,7 @@ unordered_map<string,int> qubit_id_table = {};
 int next_qubit_id = QUBIT_ID_BASE;
 
 
-/**
- * query_qubit_id()
- * 	@qubit_name The string name in the QASM instruction.
- * 	@return The qubit identifier for the qubit string. If it is not found then
- * 	it is created, added to the qubit id table, and returned.
- */
+// See the header file (interface_api_qubitid.h) for the description of the function.
 int query_qubit_id(string qubit_name) {
 
    // Retrieve the qubit_id from the qubit_id_table.
