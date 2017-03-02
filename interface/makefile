@@ -22,12 +22,9 @@
 include ../make.inc
 
 LDFLAGS =   -L${MKLROOT}/lib/intel64 -lmkl_cdft_core -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lmkl_blacs_intelmpi_ilp64 -lpthread
-
-OBJS = qasm_interface.o interface_api_qubitid.o interface_api_version.o interface_api_memory.o
-
-#LDFLAGS = -L${MKLROOT}/lib/intel64 -lmkl_cdft_core -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lmkl_blacs_intelmpi_lp64 -lpthread \
-
+OBJS = qasm_interface.o interface_api_qubitid.o interface_api_version.o interface_api_memory.o interface_api_qasm.o
 EXEC = qasm_interface.exe
+
 
 $(EXEC): makefile ${OBJS}
 	$(CC) -o $(EXEC) ${CFLAGS} ${LDFLAGS} ${OBJS} ../qureg/qHiPSTER.a
@@ -42,6 +39,10 @@ interface_api_version.o: interface_api_version.h interface_api_version.cpp makef
 
 interface_api_memory.o: interface_api_memory.h interface_api_memory.cpp makefile
 	$(CC) ${CFLAGS} ${INC} -c interface_api_memory.cpp
+
+
+interface_api_qasm.o: interface_api_qasm.h interface_api_qubitid.h interface_api_version.h interface_api_memory.h interface_api_qasm.cpp makefile
+	$(CC) ${CFLAGS} ${INC} -c interface_api_qasm.cpp
 
 qasm_interface.o: qasm_interface.cpp makefile
 	$(CC) ${CFLAGS} ${INC} -c qasm_interface.cpp
