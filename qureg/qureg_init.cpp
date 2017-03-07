@@ -281,7 +281,7 @@ TODO(Remember to find 'omp parallel for simd' equivalent for gcc)
     // MPI_Allreduce(&local_normsq, &global_normsq, 1, MPI_DOUBLE, MPI_SUM, comm);
     MPI_Allreduce_x(&local_normsq, &global_normsq,  MPI_SUM, comm);
 #else
-  global_normsq = local_normsq;
+    global_normsq = local_normsq;
 #endif
 
 #if defined(__ICC) || defined(__INTEL_COMPILER)
@@ -299,7 +299,18 @@ TODO(Remember to find 'omp parallel for simd' equivalent for gcc)
       std::size_t lclind = (baseind % localSize());
       state[lclind] = {1.0, 0.0};
     }
+// --------------------- added by Gian: beginning
+   } else if (style == "++++") {
+
+    state[0] = 1./std::sqrt( globalSize() );
+    for (std::size_t i = 1; i < localSize(); i++) {
+      state[i] = state[0];
+    }
+// --------------------- added by Gian: end
   }
+
+
+
 
   openqu::mpi::barrier();
 
