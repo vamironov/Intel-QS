@@ -43,7 +43,6 @@ DEFS = -DUSE_MM_MALLOC -DSTANDALONE -DOPENQU_HAVE_MPI -DMKL_ILP64
 CFLAGS = ${OPTS} ${DEFS} \
          -Wall -std=c++11 -fasm-blocks -qopenmp -restrict
 
-
 CFLAGS += ${OPTFLAGS}  
 
 ifneq ($(HOST),ccefw-desktop)
@@ -54,3 +53,15 @@ INC = -I./ -I../ -I/opt/intel/mkl/include/
 MKLROOT = /opt/intel/mkl/
 ################################################################################
 endif
+
+
+########### added by Gian for PCL mini-cluster #################################
+ifeq ($(HOST),pcl-hsw1.sc.intel.com)
+INC += -I/home/gian/matsuura_bay-qhipster
+MKLROOT = /swtools/intel/mkl
+CFLAGS += -mkl
+endif
+################################################################################
+
+
+
