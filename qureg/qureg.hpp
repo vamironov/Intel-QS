@@ -24,7 +24,10 @@
 #include "permute.hpp"
 #include "util/utils.hpp"
 #include "util/timer.hpp"
+
+// --------- FIXME by Gian: this random-number-generator should be eliminated ----
 #include "util/prng_engine.hpp"
+// -------------------------------------------------------------------------------
 
 #if !defined(STANDALONE)
 #include "openqu/util/alignedallocator.hpp"
@@ -201,6 +204,7 @@ class QbitRegister
   // utilities
   bool operator==(const QbitRegister &rhs);
   void Init(std::string style, std::size_t baseind);
+  void util_rand_init(Type element_of_state, std::size_t baseind);
   BaseType maxabsdiff(QbitRegister &x, Type sfactor = Type(1.0, 0.));
   BaseType maxl2normdiff(QbitRegister &x);
   void dumpbin(std::string fn);

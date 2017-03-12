@@ -222,29 +222,13 @@ TODO(Remember to find 'omp parallel for simd' equivalent for gcc)
       state[i] = {RAND01(), RAND01()};
       local_normsq += abs(state[i]) * abs(state[i]);
     }
-
 #endif
 
-#if 0 && (defined(__ICC) || defined(__INTEL_COMPILER))
-    // Parallel initialization using parallel MKL RNG
-    std::vector<VSLStreamStatePtr> stream(nthreads);
-#pragma omp parallel
-    {
-      std::size_t tid = omp_get_thread_num();
-      std::size_t nthreads=omp_get_num_threads();
-      std::size_t chunk = localSize() / nthreads;
-      std::size_t beg = tid * chunk, end = (tid + 1) * chunk;
-      if (tid == nthreads - 1) end = localSize();
-
-      int errcode = vslNewStream(&stream[tid], VSL_BRNG_MCG31, baseind);
-      assert(errcode == VSL_STATUS_OK);
-      std::size_t nskip = 2 * (myrank * localSize() + beg);
-      vslSkipAheadStream(stream[tid], nskip);
-      errcode = vdRngUniform(VSL_RNG_METHOD_UNIFORM_STD, stream[tid], 2L * (end - beg),
-                             (BaseType *)&state[beg], 0.0, 1.0);
-      assert(errcode == VSL_STATUS_OK);
-    }
-#else
+#if (defined(__ICC) || defined(__INTEL_COMPILER))
+// --------------------- FIXME by Gian: moved to separate method with template specialization
+    util_rand_init(state[0], baseind);
+#elif 0
+// --------------------- FIXME by Gian: MIT prng_engine excluded form the choices
   // Parallel initialization using open source parallel RNG
   std::vector<sitmo::prng_engine> eng(openqu::openmp::omp_get_set_num_threads());
 #pragma omp parallel reduction(+ : local_normsq)
@@ -268,6 +252,8 @@ TODO(Remember to find 'omp parallel for simd' equivalent for gcc)
       // std::cout << "i: " << i << " state: " << state[i];
     }
   }
+#else
+  std::cout << " ~~~~~~~~~~~~~~~~ no random number generator !! ~~~~~~~~~~~~~~ \n";
 #endif
 
     std::size_t lcl = localSize();
@@ -302,15 +288,12 @@ TODO(Remember to find 'omp parallel for simd' equivalent for gcc)
 // --------------------- added by Gian: beginning
    } else if (style == "++++") {
 
-    state[0] = 1./std::sqrt( globalSize() );
+    state[0] = {1./std::sqrt( globalSize() ),0.};
     for (std::size_t i = 1; i < localSize(); i++) {
       state[i] = state[0];
     }
 // --------------------- added by Gian: end
   }
-
-
-
 
   openqu::mpi::barrier();
 
@@ -320,6 +303,63 @@ TODO(Remember to find 'omp parallel for simd' equivalent for gcc)
     printf("[%u] Time to init: %lf\n", myrank, t1 - t0);
   }
 #endif
+}
+
+// --------------------- FIXME by Gian: different functions depending on the type of Type
+template <class Type>
+void QbitRegister<Type>::util_rand_init(Type element_of_state, std::size_t baseind)
+{
+  std::cout << " ~~~~~~~~~~~~~~~~ wrong type for state! ~~~~~~~~~~~~~~ \n";
+}
+//--
+template <>
+void QbitRegister<ComplexDP>::util_rand_init(ComplexDP element_of_state, std::size_t baseind)
+{
+    unsigned myrank = openqu::mpi::Environment::rank();
+    unsigned nprocs = openqu::mpi::Environment::size();
+    // Parallel initialization using parallel MKL RNG
+    std::size_t nthreads=omp_get_num_threads();
+    std::vector<VSLStreamStatePtr> stream(nthreads);
+#pragma omp parallel
+    {
+      std::size_t tid = omp_get_thread_num();
+      std::size_t chunk = localSize() / nthreads;
+      std::size_t beg = tid * chunk, end = (tid + 1) * chunk;
+      if (tid == nthreads - 1) end = localSize();
+
+      int errcode = vslNewStream(&stream[tid], VSL_BRNG_MCG31, baseind);
+      assert(errcode == VSL_STATUS_OK);
+      std::size_t nskip = 2L * (myrank * localSize() + beg);
+      vslSkipAheadStream(stream[tid], nskip);
+      errcode = vdRngUniform(VSL_RNG_METHOD_UNIFORM_STD, stream[tid], 2L * (end - beg),
+                        (double *)&state[beg], 0.0, 1.0);
+      assert(errcode == VSL_STATUS_OK);
+    }
+}
+//--
+template <>
+void QbitRegister<ComplexSP>::util_rand_init(ComplexSP element_of_state, std::size_t baseind)
+{
+    unsigned myrank = openqu::mpi::Environment::rank();
+    unsigned nprocs = openqu::mpi::Environment::size();
+    // Parallel initialization using parallel MKL RNG
+    std::size_t nthreads=omp_get_num_threads();
+    std::vector<VSLStreamStatePtr> stream(nthreads);
+#pragma omp parallel
+    {
+      std::size_t tid = omp_get_thread_num();
+      std::size_t chunk = localSize() / nthreads;
+      std::size_t beg = tid * chunk, end = (tid + 1) * chunk;
+      if (tid == nthreads - 1) end = localSize();
+
+      int errcode = vslNewStream(&stream[tid], VSL_BRNG_MCG31, baseind);
+      assert(errcode == VSL_STATUS_OK);
+      std::size_t nskip = 2L * (myrank * localSize() + beg);
+      vslSkipAheadStream(stream[tid], nskip);
+      errcode = vsRngUniform(VSL_RNG_METHOD_UNIFORM_STD, stream[tid], 2L * (end - beg),
+                        (float *)&state[beg], 0.0, 1.0);
+      assert(errcode == VSL_STATUS_OK);
+    }
 }
 
 template <class Type>
