@@ -28,3 +28,9 @@ clean:
 depend:
 	cd qureg; make depend
 	cd tests; make depend
+
+docs-clean:
+	rm -fr docs/html/
+
+docs-doxy:
+	doxygen -s docs/doxy-html.config
