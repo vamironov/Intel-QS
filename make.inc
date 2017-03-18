@@ -28,10 +28,11 @@ CC = CC -mkl -no-ipo
 CC = mpiicpc 
 else
 ########### Modified for the ccefw-desktop.jf.intel.com environment ############
-CC = /etc/local/g++-6.2
-CC = /opt/intel/impi_latest/bin64/mpicxx
+#CC = /etc/local/g++-6.2
+CC = g++
+CC = /opt/intel/impi/2017.2.174/bin64/mpicxx
 CC = CC -mkl -no-ipo
-CC = /opt/intel/impi_latest/bin64/mpiicpc
+CC = /opt/intel/impi/2017.2.174/bin64/mpiicpc
 ################################################################################
 endif
 
