@@ -22,14 +22,8 @@
 #pragma once
 
 #include "util/utils.hpp"
-
-#if !defined(STANDALONE)
-#include "openqu/util/conversion.hpp"
-#include "openqu/util/mpi.hpp"
-#else
 #include "util/conversion.hpp"
 #include "util/mpi.hpp"
-#endif
 
 #ifdef OPENQU_HAVE_MPI
 #include "mpi.h"

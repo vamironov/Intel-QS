@@ -21,11 +21,7 @@
 
 #pragma once
 
-#if !defined(STANDALONE)
-#include "openqu/util/mpi.hpp"
-#else
 #include "util/mpi.hpp"
-#endif
 #include <immintrin.h>
 #include <climits>
 #include <complex>
