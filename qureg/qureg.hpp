@@ -29,15 +29,6 @@
 #include "util/prng_engine.hpp"
 // -------------------------------------------------------------------------------
 
-#if !defined(STANDALONE)
-#include "openqu/util/alignedallocator.hpp"
-#include "openqu/util/mpi.hpp"
-#include "openqu/util/bitops.hpp"
-#include "openqu/util/conversion.hpp"
-#include "openqu/util/mpi.hpp"
-#include "openqu/util/openmp.hpp"
-#include "openqu/util/tinymatrix.hpp"
-#else
 #include "util/alignedallocator.hpp"
 #include "util/mpi.hpp"
 #include "util/bitops.hpp"
@@ -45,7 +36,6 @@
 #include "util/mpi.hpp"
 #include "util/openmp.hpp"
 #include "util/tinymatrix.hpp"
-#endif
 
 #include <cassert>
 #include <cmath>

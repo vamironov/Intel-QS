@@ -1,8 +1,4 @@
-#if !defined(STANDALONE)
-#include "openqu/engines/distrwavefunctionsimulator/qHiPSTER_backend/src/qureg.hpp"
-#else
 #include "qureg/qureg.hpp"
-#endif
 
 
 #if (defined(__ICC) || defined(__INTEL_COMPILER))

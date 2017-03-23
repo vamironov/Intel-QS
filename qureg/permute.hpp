@@ -23,12 +23,7 @@
 #include <numeric>
 #include <map>
 #include <vector>
-
-#if !defined(STANDALONE)
-#include "openqu/util/conversion.hpp"
-#else
 #include "util/conversion.hpp"
-#endif
 
 inline std::size_t perm(std::size_t v, std::size_t *map, std::size_t nqbits)
 {
