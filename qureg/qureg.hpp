@@ -201,10 +201,15 @@ class QbitRegister
   void collapseQubit(unsigned qubit, bool value);
   BaseType getProbability(unsigned qubit);
 
+  // expectation values without state update
+  void expectationValueX(unsigned const qubit, BaseType &sum);
+  void expectationValueY(unsigned const qubit, BaseType &sum);
+  void expectationValueZ(unsigned const qubit, BaseType &sum);
+
   // utilities
   bool operator==(const QbitRegister &rhs);
   void Init(std::string style, std::size_t baseind);
-  void util_rand_init(Type element_of_state, std::size_t baseind);
+  void util_rand_init(std::size_t baseind);
   BaseType maxabsdiff(QbitRegister &x, Type sfactor = Type(1.0, 0.));
   BaseType maxl2normdiff(QbitRegister &x);
   void dumpbin(std::string fn);

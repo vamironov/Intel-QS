@@ -69,3 +69,7 @@ qureg_applyswap.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/timer.hpp
 qureg_applyswap.o: ../util/mpi.hpp ../util/prng_engine.hpp
 qureg_applyswap.o: highperfkernels.hpp
 ../util/utils.o: ../util/timer.hpp ../util/utils.hpp ../util/mpi.hpp
+
+qureg_expectval.o: qureg.hpp permute.hpp ../util/utils.hpp
+qureg_expectval.o: ../util/timer.hpp ../util/mpi.hpp
+qureg_expectval.o: ../util/prng_engine.hpp highperfkernels.hpp
