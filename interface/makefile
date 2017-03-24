@@ -22,35 +22,47 @@
 include ../make.inc
 
 LDFLAGS =   -L${MKLROOT}/lib/intel64 -lmkl_cdft_core -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lmkl_blacs_intelmpi_ilp64 -lpthread
-OBJS = qhipster_interface_main.o interface_api_qubitid.o interface_api_version.o interface_api_memory.o interface_api_qasm.o
+
+SRC  = $(wildcard *.cpp)
+OBJS = $(addsuffix .o, $(basename $(SRC)))
 EXEC = qasm_interface.exe
 
+%.o : %.cpp makefile
+	$(CC) ${CFLAGS} ${INC} -c $< -o $@
 
-$(EXEC): makefile ${OBJS}
-	$(CC) -o $(EXEC) ${CFLAGS} ${LDFLAGS} ${OBJS} ../qureg/qHiPSTER.a
-
-interface_api_qubitid.o: interface_api_qubitid.h interface_api_qubitid.cpp makefile
-	$(CC) ${CFLAGS} ${INC} -c interface_api_qubitid.cpp
-
-
-interface_api_version.o: interface_api_version.h interface_api_version.cpp makefile
-	$(CC) ${CFLAGS} ${INC} -c interface_api_version.cpp
-
-
-interface_api_memory.o: interface_api_memory.h interface_api_memory.cpp makefile
-	$(CC) ${CFLAGS} ${INC} -c interface_api_memory.cpp
-
-
-interface_api_qasm.o: interface_api_qasm.h interface_api_qubitid.h interface_api_version.h interface_api_memory.h interface_api_qasm.cpp makefile
-	$(CC) ${CFLAGS} ${INC} -c interface_api_qasm.cpp
-
-qhipster_interface_main.o: qhipster_interface_main.cpp makefile
-	$(CC) ${CFLAGS} ${INC} -c qhipster_interface_main.cpp
+all: $(EXEC)
+$(EXEC): ${OBJS} makefile ../qureg/qHiPSTER.a
+	$(CC) ${CFLAGS} ${LDFLAGS} ${OBJS} ../qureg/qHiPSTER.a -o $(EXEC) 
 
 clean:
-	rm -f *.o *.s *.d *~
-	rm -f $(EXEC)
+	rm -f *.o *.s *.d *~ $(EXEC)
 
 depend:
-	makedepend -Y ${SRC} ${INC}
+	makedepend -Y ${DEFS} ${SRC} ${INC}
+
 # DO NOT DELETE
+
+qhipster_interface_main.o: ../qureg/qureg.hpp ../qureg/permute.hpp
+qhipster_interface_main.o: ../util/utils.hpp ../util/mpi.hpp
+qhipster_interface_main.o: ../util/conversion.hpp ../util/timer.hpp
+qhipster_interface_main.o: ../util/prng_engine.hpp
+qhipster_interface_main.o: ../util/alignedallocator.hpp ../util/bitops.hpp
+qhipster_interface_main.o: ../util/openmp.hpp ../util/tinymatrix.hpp
+qhipster_interface_main.o: ../qureg/QbitRegisterMetric.hpp
+qhipster_interface_main.o: interface_api_qasm.h
+interface_api_memory.o: ../qureg/qureg.hpp ../qureg/permute.hpp
+interface_api_memory.o: ../util/utils.hpp ../util/mpi.hpp
+interface_api_memory.o: ../util/conversion.hpp ../util/timer.hpp
+interface_api_memory.o: ../util/prng_engine.hpp ../util/alignedallocator.hpp
+interface_api_memory.o: ../util/bitops.hpp ../util/openmp.hpp
+interface_api_memory.o: ../util/tinymatrix.hpp
+interface_api_memory.o: ../qureg/QbitRegisterMetric.hpp
+interface_api_qasm.o: ../qureg/qureg.hpp ../qureg/permute.hpp
+interface_api_qasm.o: ../util/utils.hpp ../util/mpi.hpp
+interface_api_qasm.o: ../util/conversion.hpp ../util/timer.hpp
+interface_api_qasm.o: ../util/prng_engine.hpp ../util/alignedallocator.hpp
+interface_api_qasm.o: ../util/bitops.hpp ../util/openmp.hpp
+interface_api_qasm.o: ../util/tinymatrix.hpp ../qureg/QbitRegisterMetric.hpp
+interface_api_qasm.o: interface_api_qubitid.h interface_api_version.h
+interface_api_qasm.o: interface_api_memory.h
+interface_api_version.o: ../qureg/qureg_version.hpp interface_api_version.h

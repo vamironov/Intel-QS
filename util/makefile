@@ -19,26 +19,25 @@
 ## express and approved by Intel in writing.
 ##------------------------------------------------------------------------------
 
-all:
-	cd util; make
-	cd qureg; make
-	cd tests; make
-	cd interface; make
+include ../make.inc
 
-clean:
-	cd util; make clean
-	cd qureg; make clean
-	cd tests; make clean
-	cd interface; make clean
+SRC := openmp.cpp mpi.cpp utils.cpp
+OBJ := $(addsuffix .o, $(basename $(SRC)))
+
+%.o : %.cpp makefile
+	$(CC) ${CFLAGS} ${INC} -c $< -o $@
+
+
+all: $(OBJ) makefile
 
 depend:
-	cd util; make depend
-	cd qureg; make depend
-	cd tests; make depend
-	cd interface; make depend
+	makedepend -Y ${DEFS} ${SRC} ${INC}
 
-docs-clean:
-	rm -fr docs/html/
+clean:
+	rm -f *.o *.s *.d *~
 
-docs-doxy:
-	doxygen -s docs/doxy-html.config
+# DO NOT DELETE
+
+openmp.o: ../util/openmp.hpp ../util/mpi.hpp ../util/conversion.hpp
+mpi.o: mpi.hpp openmp.hpp ../util/bitops.hpp ../util/conversion.hpp
+utils.o: timer.hpp ../util/utils.hpp ../util/mpi.hpp ../util/conversion.hpp

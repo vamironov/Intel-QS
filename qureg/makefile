@@ -21,7 +21,7 @@
 
 include ../make.inc
 
-SRC := $(wildcard *.cpp ../util/openmp.cpp ../util/mpi.cpp ../util/utils.cpp)
+SRC := $(wildcard *.cpp)
 OBJ := $(addsuffix .o, $(basename $(SRC)))
 
 %.o : %.cpp makefile
@@ -29,47 +29,87 @@ OBJ := $(addsuffix .o, $(basename $(SRC)))
 
 
 all: qHiPSTER.a
-qHiPSTER.a: $(OBJ) makefile
+qHiPSTER.a: $(OBJ) ../util/openmp.o ../util/utils.o ../util/mpi.o ../makefile
 	ar rcs $@ $^
 
 depend:
-	makedepend -Y ${SRC} ${INC}
+	makedepend -Y ${DEFS} ${SRC} ${INC}
 
 clean:
-	rm -f *.o *.s *.d *~ 
+	rm -f *.o *.s *.d *~ ./qHiPSTER.a
+
 # DO NOT DELETE
 
-qureg_utils.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/timer.hpp
-qureg_utils.o: ../util/mpi.hpp ../util/prng_engine.hpp
-qureg_version.o: qureg_version.hpp 
+qureg_utils.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/mpi.hpp
+qureg_utils.o: ../util/conversion.hpp ../util/timer.hpp
+qureg_utils.o: ../util/prng_engine.hpp ../util/alignedallocator.hpp
+qureg_utils.o: ../util/bitops.hpp ../util/openmp.hpp ../util/tinymatrix.hpp
+qureg_utils.o: QbitRegisterMetric.hpp
 qureg_applyctrl1qubitgate.o: qureg.hpp permute.hpp ../util/utils.hpp
-qureg_applyctrl1qubitgate.o: ../util/timer.hpp ../util/mpi.hpp
-qureg_applyctrl1qubitgate.o: ../util/prng_engine.hpp highperfkernels.hpp
-qureg_measure.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/timer.hpp
-qureg_measure.o: ../util/mpi.hpp ../util/prng_engine.hpp
-qureg_permute.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/timer.hpp
-qureg_permute.o: ../util/mpi.hpp ../util/prng_engine.hpp
-qureg_init.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/timer.hpp
-qureg_init.o: ../util/mpi.hpp ../util/prng_engine.hpp
+qureg_applyctrl1qubitgate.o: ../util/mpi.hpp ../util/conversion.hpp
+qureg_applyctrl1qubitgate.o: ../util/timer.hpp ../util/prng_engine.hpp
+qureg_applyctrl1qubitgate.o: ../util/alignedallocator.hpp ../util/bitops.hpp
+qureg_applyctrl1qubitgate.o: ../util/openmp.hpp ../util/tinymatrix.hpp
+qureg_applyctrl1qubitgate.o: QbitRegisterMetric.hpp highperfkernels.hpp
+qureg_measure.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/mpi.hpp
+qureg_measure.o: ../util/conversion.hpp ../util/timer.hpp
+qureg_measure.o: ../util/prng_engine.hpp ../util/alignedallocator.hpp
+qureg_measure.o: ../util/bitops.hpp ../util/openmp.hpp ../util/tinymatrix.hpp
+qureg_measure.o: QbitRegisterMetric.hpp
+qureg_permute.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/mpi.hpp
+qureg_permute.o: ../util/conversion.hpp ../util/timer.hpp
+qureg_permute.o: ../util/prng_engine.hpp ../util/alignedallocator.hpp
+qureg_permute.o: ../util/bitops.hpp ../util/openmp.hpp ../util/tinymatrix.hpp
+qureg_permute.o: QbitRegisterMetric.hpp
+qureg_init.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/mpi.hpp
+qureg_init.o: ../util/conversion.hpp ../util/timer.hpp
+qureg_init.o: ../util/prng_engine.hpp ../util/alignedallocator.hpp
+qureg_init.o: ../util/bitops.hpp ../util/openmp.hpp ../util/tinymatrix.hpp
+qureg_init.o: QbitRegisterMetric.hpp
+qureg_applytoffoli.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/mpi.hpp
+qureg_applytoffoli.o: ../util/conversion.hpp ../util/timer.hpp
+qureg_applytoffoli.o: ../util/prng_engine.hpp ../util/alignedallocator.hpp
+qureg_applytoffoli.o: ../util/bitops.hpp ../util/openmp.hpp
+qureg_applytoffoli.o: ../util/tinymatrix.hpp QbitRegisterMetric.hpp
+qureg_applytoffoli.o: highperfkernels.hpp
 highperfkernels.o: highperfkernels.hpp qureg.hpp permute.hpp
-highperfkernels.o: ../util/utils.hpp ../util/timer.hpp ../util/mpi.hpp
-highperfkernels.o: ../util/prng_engine.hpp
+highperfkernels.o: ../util/utils.hpp ../util/mpi.hpp ../util/conversion.hpp
+highperfkernels.o: ../util/timer.hpp ../util/prng_engine.hpp
+highperfkernels.o: ../util/alignedallocator.hpp ../util/bitops.hpp
+highperfkernels.o: ../util/openmp.hpp ../util/tinymatrix.hpp
+highperfkernels.o: QbitRegisterMetric.hpp
 qureg_apply1qubitgate.o: qureg.hpp permute.hpp ../util/utils.hpp
-qureg_apply1qubitgate.o: ../util/timer.hpp ../util/mpi.hpp
-qureg_apply1qubitgate.o: ../util/prng_engine.hpp highperfkernels.hpp
+qureg_apply1qubitgate.o: ../util/mpi.hpp ../util/conversion.hpp
+qureg_apply1qubitgate.o: ../util/timer.hpp ../util/prng_engine.hpp
+qureg_apply1qubitgate.o: ../util/alignedallocator.hpp ../util/bitops.hpp
+qureg_apply1qubitgate.o: ../util/openmp.hpp ../util/tinymatrix.hpp
+qureg_apply1qubitgate.o: QbitRegisterMetric.hpp highperfkernels.hpp
 qureg_apply2qubitgate.o: qureg.hpp permute.hpp ../util/utils.hpp
-qureg_apply2qubitgate.o: ../util/timer.hpp ../util/mpi.hpp
-qureg_apply2qubitgate.o: ../util/prng_engine.hpp highperfkernels.hpp
-qureg_applydiag.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/timer.hpp
-qureg_applydiag.o: ../util/mpi.hpp ../util/prng_engine.hpp
+qureg_apply2qubitgate.o: ../util/mpi.hpp ../util/conversion.hpp
+qureg_apply2qubitgate.o: ../util/timer.hpp ../util/prng_engine.hpp
+qureg_apply2qubitgate.o: ../util/alignedallocator.hpp ../util/bitops.hpp
+qureg_apply2qubitgate.o: ../util/openmp.hpp ../util/tinymatrix.hpp
+qureg_apply2qubitgate.o: QbitRegisterMetric.hpp highperfkernels.hpp
+qureg_applydiag.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/mpi.hpp
+qureg_applydiag.o: ../util/conversion.hpp ../util/timer.hpp
+qureg_applydiag.o: ../util/prng_engine.hpp ../util/alignedallocator.hpp
+qureg_applydiag.o: ../util/bitops.hpp ../util/openmp.hpp
+qureg_applydiag.o: ../util/tinymatrix.hpp QbitRegisterMetric.hpp
 qureg_applydiag.o: highperfkernels.hpp
-qureg_fusion.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/timer.hpp
-qureg_fusion.o: ../util/mpi.hpp ../util/prng_engine.hpp
-qureg_applyswap.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/timer.hpp
-qureg_applyswap.o: ../util/mpi.hpp ../util/prng_engine.hpp
+qureg_fusion.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/mpi.hpp
+qureg_fusion.o: ../util/conversion.hpp ../util/timer.hpp
+qureg_fusion.o: ../util/prng_engine.hpp ../util/alignedallocator.hpp
+qureg_fusion.o: ../util/bitops.hpp ../util/openmp.hpp ../util/tinymatrix.hpp
+qureg_fusion.o: QbitRegisterMetric.hpp
+qureg_applyswap.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/mpi.hpp
+qureg_applyswap.o: ../util/conversion.hpp ../util/timer.hpp
+qureg_applyswap.o: ../util/prng_engine.hpp ../util/alignedallocator.hpp
+qureg_applyswap.o: ../util/bitops.hpp ../util/openmp.hpp
+qureg_applyswap.o: ../util/tinymatrix.hpp QbitRegisterMetric.hpp
 qureg_applyswap.o: highperfkernels.hpp
-../util/utils.o: ../util/timer.hpp ../util/utils.hpp ../util/mpi.hpp
-
-qureg_expectval.o: qureg.hpp permute.hpp ../util/utils.hpp
-qureg_expectval.o: ../util/timer.hpp ../util/mpi.hpp
-qureg_expectval.o: ../util/prng_engine.hpp highperfkernels.hpp
+qureg_version.o: qureg_version.hpp
+qureg_expectval.o: qureg.hpp permute.hpp ../util/utils.hpp ../util/mpi.hpp
+qureg_expectval.o: ../util/conversion.hpp ../util/timer.hpp
+qureg_expectval.o: ../util/prng_engine.hpp ../util/alignedallocator.hpp
+qureg_expectval.o: ../util/bitops.hpp ../util/openmp.hpp
+qureg_expectval.o: ../util/tinymatrix.hpp QbitRegisterMetric.hpp
