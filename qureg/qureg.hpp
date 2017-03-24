@@ -205,6 +205,15 @@ class QbitRegister
   void expectationValueX(unsigned const qubit, BaseType &sum);
   void expectationValueY(unsigned const qubit, BaseType &sum);
   void expectationValueZ(unsigned const qubit, BaseType &sum);
+  void expectationValueXX(unsigned const qubit, unsigned const qubit2, BaseType &sum);
+  void expectationValueXY(unsigned const qubit, unsigned const qubit2, BaseType &sum);
+  void expectationValueXZ(unsigned const qubit, unsigned const qubit2, BaseType &sum);
+  void expectationValueYX(unsigned const qubit, unsigned const qubit2, BaseType &sum);
+  void expectationValueYY(unsigned const qubit, unsigned const qubit2, BaseType &sum);
+  void expectationValueYZ(unsigned const qubit, unsigned const qubit2, BaseType &sum);
+  void expectationValueZX(unsigned const qubit, unsigned const qubit2, BaseType &sum);
+  void expectationValueZY(unsigned const qubit, unsigned const qubit2, BaseType &sum);
+  void expectationValueZZ(unsigned const qubit, unsigned const qubit2, BaseType &sum);
 
   // utilities
   bool operator==(const QbitRegister &rhs);
