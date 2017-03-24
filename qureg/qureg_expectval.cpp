@@ -30,7 +30,7 @@ void QbitRegister<Type>::expectationValueX(unsigned qubit, BaseType &sum)
 {
 // compute the iexpectation value <psi|X|psi> = <psi|H.Z.H|psi>
   applyHadamard(qubit);
-  sum += 2.*getProbability(qubit) - 1.;
+  sum += 1. - 2.*getProbability(qubit);
 // recover the initial state |psi>
   applyHadamard(qubit);
 }
@@ -70,11 +70,20 @@ void QbitRegister<Type>::expectationValueX(unsigned qubit, BaseType &sum)
 template <class Type>
 void QbitRegister<Type>::expectationValueY(unsigned qubit, BaseType &sum)
 {
-// compute the iexpectation value <psi|X|psi> = <psi|H.Z.H|psi>
-  applyHadamard(qubit);
-  sum += 2.*getProbability(qubit) - 1.;
-// recover the initial state |psi>
-  applyHadamard(qubit);
+// G is matrix from change of basis Y --> Z , such that G^dagger.Z.G=Y
+  openqu::TinyMatrix<Type, 2, 2, 32> G;
+  BaseType f = 1. / std::sqrt(2.);
+  G(0, 0) = G(1, 0) = Type(f, 0.);
+  G(0, 1) = Type(0.,-f);
+  G(1, 1) = Type(0., f);
+// compute the iexpectation value <psi|Y|psi> = <psi|G^dagger.Z.G|psi>
+  apply1QubitGate(qubit,G);
+  sum += 1. - 2.*getProbability(qubit);
+// recover the initial state |psi> by applying G^dagger
+  G(0, 0) = G(0, 1) = Type(f, 0.);
+  G(1, 0) = Type(0., f);
+  G(1, 1) = Type(0.,-f);
+  apply1QubitGate(qubit,G);
 }
 
 
@@ -83,7 +92,7 @@ void QbitRegister<Type>::expectationValueY(unsigned qubit, BaseType &sum)
 template <class Type>
 void QbitRegister<Type>::expectationValueZ(unsigned qubit, BaseType &sum)
 {
-  sum += 2.*getProbability(qubit) - 1.;
+  sum += 1. - 2.*getProbability(qubit);
 }
 
 
@@ -121,10 +130,10 @@ void QbitRegister<Type>::expectationValueXX(unsigned qubit, unsigned qubit2, Bas
 
 
 //------------------------------------------------------------------------------
-// TODO FIXME : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
-//              at the moment I am using the non-standard one 00-10-01-11 
+// TODO : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
+//        this code uses the standard 00-01-10-11 despite this being opposite to backend storage convention
 template <class Type>
-void QbitRegister<Type>::expectationValueXY(unsigned qubit, unsigned qubit2, BaseType &sum)
+void QbitRegister<Type>::expectationValueYX(unsigned qubit, unsigned qubit2, BaseType &sum)
 {
 #ifdef __ONLY_NORMALIZED_STATES__
   BaseType initial_norm = 1.;
@@ -158,10 +167,10 @@ void QbitRegister<Type>::expectationValueXY(unsigned qubit, unsigned qubit2, Bas
 
 
 //------------------------------------------------------------------------------
-// TODO FIXME : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
-//              at the moment I am using the non-standard one 00-10-01-11 
+// TODO : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
+//        this code uses the standard 00-01-10-11 despite this being opposite to backend storage convention
 template <class Type>
-void QbitRegister<Type>::expectationValueXZ(unsigned qubit, unsigned qubit2, BaseType &sum)
+void QbitRegister<Type>::expectationValueZX(unsigned qubit, unsigned qubit2, BaseType &sum)
 {
 #ifdef __ONLY_NORMALIZED_STATES__
   BaseType initial_norm = 1.;
@@ -195,12 +204,12 @@ void QbitRegister<Type>::expectationValueXZ(unsigned qubit, unsigned qubit2, Bas
 
 
 //------------------------------------------------------------------------------
-// TODO FIXME : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
-//              at the moment I am using the non-standard one 00-10-01-11 
+// TODO : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
+//        this code uses the standard 00-01-10-11 despite this being opposite to backend storage convention
 template <class Type>
-void QbitRegister<Type>::expectationValueYX(unsigned qubit, unsigned qubit2, BaseType &sum)
+void QbitRegister<Type>::expectationValueXY(unsigned qubit, unsigned qubit2, BaseType &sum)
 {
-  expectationValueXY(qubit2, qubit, sum);
+  expectationValueYX(qubit2, qubit, sum);
 }
 
 
@@ -240,10 +249,10 @@ void QbitRegister<Type>::expectationValueYY(unsigned qubit, unsigned qubit2, Bas
 
 
 //------------------------------------------------------------------------------
-// TODO FIXME : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
-//              at the moment I am using the non-standard one 00-10-01-11 
+// TODO : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
+//        this code uses the standard 00-01-10-11 despite this being opposite to backend storage convention
 template <class Type>
-void QbitRegister<Type>::expectationValueYZ(unsigned qubit, unsigned qubit2, BaseType &sum)
+void QbitRegister<Type>::expectationValueZY(unsigned qubit, unsigned qubit2, BaseType &sum)
 {
 #ifdef __ONLY_NORMALIZED_STATES__
   BaseType initial_norm = 1.;
@@ -277,22 +286,22 @@ void QbitRegister<Type>::expectationValueYZ(unsigned qubit, unsigned qubit2, Bas
 
 
 //------------------------------------------------------------------------------
-// TODO FIXME : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
-//              at the moment I am using the non-standard one 00-10-01-11 
+// TODO : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
+//        this code uses the standard 00-01-10-11 despite this being opposite to backend storage convention
 template <class Type>
-void QbitRegister<Type>::expectationValueZX(unsigned qubit, unsigned qubit2, BaseType &sum)
+void QbitRegister<Type>::expectationValueXZ(unsigned qubit, unsigned qubit2, BaseType &sum)
 {
-  expectationValueXZ(qubit2, qubit, sum);
+  expectationValueZX(qubit2, qubit, sum);
 }
 
 
 //------------------------------------------------------------------------------
-// TODO FIXME : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
-//              at the moment I am using the non-standard one 00-10-01-11 
+// TODO : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
+//        this code uses the standard 00-01-10-11 despite this being opposite to backend storage convention
 template <class Type>
-void QbitRegister<Type>::expectationValueZY(unsigned qubit, unsigned qubit2, BaseType &sum)
+void QbitRegister<Type>::expectationValueYZ(unsigned qubit, unsigned qubit2, BaseType &sum)
 {
-  expectationValueYZ(qubit2, qubit, sum);
+  expectationValueZY(qubit2, qubit, sum);
 }
 
 
@@ -330,6 +339,93 @@ void QbitRegister<Type>::expectationValueZZ(unsigned qubit, unsigned qubit2, Bas
   inverse(0, 0) = inverse(3, 3) = Type( 1./3., 0.);
   inverse(1, 1) = inverse(2, 2) = Type(  1.  , 0.);
   apply2QubitGate(qubit, qubit2, inverse);
+}
+
+
+//------------------------------------------------------------------------------
+// Hamming weight function
+std::size_t Hamming_weight(std::size_t x)
+{
+  std::size_t count=0;
+  for (count=0; x; count++)
+    x &= x-1;
+  return count;
+}
+
+
+//------------------------------------------------------------------------------
+// observable:  1==PauliX , 2==PauliY , 3==PauliZ
+template <class Type>
+void QbitRegister<Type>::expectationValue(std::vector<unsigned> &qubits, std::vector<unsigned> &observables, BaseType &sum)
+{
+  assert( qubits.size() == observables.size() );
+
+// G is matrix from change of basis Y --> Z, such that Ginv.Z.G = Y 
+  openqu::TinyMatrix<Type, 2, 2, 32> G;
+  BaseType f = 1. / std::sqrt(2.);
+  G(0, 0) = G(1, 0) = Type(f , 0.);
+  G(0, 1) = Type(0.,-f);
+  G(1, 1) = Type(0., f);
+// G^dagger = G^-1
+  openqu::TinyMatrix<Type, 2, 2, 32> Ginv;
+  Ginv(0, 0) = Ginv(0, 1) = Type(f , 0.);
+  Ginv(1, 0) = Type(0., f);
+  Ginv(1, 1) = Type(0.,-f);
+
+  for (std::size_t i=0; i<qubits.size(); i++)
+  {
+    if (observables[i]==1)
+      applyHadamard(qubits[i]);
+    else if (observables[i]==2)
+      apply1QubitGate(qubits[i],G);
+    else if (observables[i]==3)
+      continue;
+    else
+      assert(0);	// should never be called
+  }  
+
+// compute the expectation value
+  MPI_Comm comm = openqu::mpi::Environment::comm();
+  std::size_t myrank = openqu::mpi::Environment::rank();
+  BaseType local_value = 0;
+  std::size_t glb_start = UL(myrank) * localSize();
+// integer in binary notation with 1 located at the position of the qubits
+  std::size_t y=0;
+  for (std::size_t i=0; i<qubits.size(); i++)
+    y += 1 << qubits[i];
+
+#pragma omp parallel
+{
+  std::size_t x;
+  #pragma omp for reduction(+ : local_value)
+  for(std::size_t i = 0; i < localSize(); i++)
+  {
+     x = glb_start + i;
+     if ( Hamming_weight( x & y ) & 1 )	// odd number of 1 in the qubits involved
+       local_value -= std::abs(state[i]) * std::abs(state[i]);
+     else
+       local_value += std::abs(state[i]) * std::abs(state[i]);
+  }
+}
+  BaseType global_value;
+  // MPI_Allreduce(&local_value, &global_value, 1, MPI_DOUBLE, MPI_SUM, comm);
+  MPI_Allreduce_x(&local_value, &global_value,  MPI_SUM, comm);
+
+// update sum
+  sum += global_value;
+
+// undo the iquantum gates to recover the initial state |psi>
+  for (std::size_t i=0; i<qubits.size(); i++)
+  {
+    if (observables[i]==1)
+      applyHadamard(qubits[i]);
+    else if (observables[i]==2)
+      apply1QubitGate(qubits[i],Ginv);
+    else if (observables[i]==3)
+      continue;
+    else
+      assert(0);	// should never be called
+  }  
 }
 
 

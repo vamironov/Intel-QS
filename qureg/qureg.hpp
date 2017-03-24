@@ -214,6 +214,7 @@ class QbitRegister
   void expectationValueZX(unsigned const qubit, unsigned const qubit2, BaseType &sum);
   void expectationValueZY(unsigned const qubit, unsigned const qubit2, BaseType &sum);
   void expectationValueZZ(unsigned const qubit, unsigned const qubit2, BaseType &sum);
+  void expectationValue(std::vector<unsigned> &qubits, std::vector<unsigned> &observables, BaseType &sum);
 
   // utilities
   bool operator==(const QbitRegister &rhs);
