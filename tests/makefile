@@ -8,9 +8,7 @@ ifdef memcheck
  LDFLAGS := ${LDFLAGS} /home/msmelyan/valgrind-3.11.0/installed/lib/valgrind/libmpiwrap-amd64-linux.so
 endif
 
-EXECS := benchgates.exe 
-EXECS := testgates.exe 
-EXECS := qft_test.exe
+EXECS := benchgates.exe testgates.exe qft_test.exe
 
 all: ${EXECS}
 
