@@ -58,14 +58,13 @@ int main(int argc, char **argv) {
 #pragma omp parallel
     {
         int threadID = omp_get_thread_num();
-        double x   = 0.0;
         double sum = 0.0; // Thread Local Storage.
 
         printf("Thread %d\n", threadID);
 
         // Compute the Riemann sum for the approximate integral.
         for(unsigned long i=threadID;i<N;i=i+global_num_threads) {
-            x = (i+0.5)*delta_x;
+            double x = (i+0.5)*delta_x;
             sum += (4.0 / (1.0+x*x)); 
         }
 
