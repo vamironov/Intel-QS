@@ -53,28 +53,28 @@ int main(int argc, char **argv) {
     // Parameter set for the specific architecture.
     omp_set_num_threads(global_num_threads);
 
+    // Start performance check.
     auto start = std::chrono::steady_clock::now();
+    double sum = 0.0;
 
 #pragma omp parallel
     {
         int threadID = omp_get_thread_num();
-        double sum = 0.0; // Thread Local Storage.
 
         printf("Thread %d\n", threadID);
 
         // Compute the Riemann sum for the approximate integral.
-        for(unsigned long i=threadID;i<N;i=i+global_num_threads) {
-            double x = (i+0.5)*delta_x;
-            sum += (4.0 / (1.0+x*x)); 
+        #pragma omp for reduction(+:sum)
+        for(unsigned long i=0;i<N;i++) {
+            double x = (i+0.5) * delta_x;
+            sum = sum + (4.0 / (1.0+x*x)); 
         }
-
-        sum = sum * delta_x;
-
-        // Avoid false sharing using an atomic directive.
-        #pragma omp atomic
-        pi += sum;
     }
 
+    pi = sum * delta_x;
+
+
+    // End performance check.
     auto end = std::chrono::steady_clock::now();
     auto diff = end-start;
 
