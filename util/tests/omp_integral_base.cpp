@@ -46,43 +46,42 @@ int main(int argc, char **argv) {
 
     // Compute delta_x of the integral.
     double delta_x = (integral_end - integral_start) / N;
-    double sum = 0.0;
+    double pi = 0.0;
     
     const int global_num_threads = 12;
 
     // Parameter set for the specific architecture.
     omp_set_num_threads(global_num_threads);
 
-    double alignas(64) sums[global_num_threads][16]; // False Sharing avoidance gymnastics. 
-
     auto start = std::chrono::steady_clock::now();
 
 #pragma omp parallel
     {
         int threadID = omp_get_thread_num();
-        double x;
+        double x   = 0.0;
+        double sum = 0.0; // Thread Local Storage.
+
         printf("Thread %d\n", threadID);
 
-        sums[threadID][0] = 0.0;
         // Compute the Riemann sum for the approximate integral.
-
         for(unsigned long i=threadID;i<N;i=i+global_num_threads) {
             x = (i+0.5)*delta_x;
-            sums[threadID][0] += (4.0 / (1.0+x*x)); 
+            sum += (4.0 / (1.0+x*x)); 
         }
-    }
 
-    // Compute the full sum from all the threads.
-    for(int i = 0;i<global_num_threads;i++) {
-        sum += sums[i][0] * delta_x;
+        sum = sum * delta_x;
+
+        // Avoid false sharing using an atomic directive.
+        #pragma omp atomic
+        pi += sum;
     }
 
     auto end = std::chrono::steady_clock::now();
     auto diff = end-start;
 
     printf("Result: %.16f w/ error=%.16f Exec Time=(%lu) ms\n",\
-               sum,\
-               GET_PI_DEVIATION(sum),\
+               pi,\
+               GET_PI_DEVIATION(pi),\
                std::chrono::duration_cast<std::chrono::milliseconds>(diff).count());
 
     return 1;
