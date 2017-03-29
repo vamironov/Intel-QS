@@ -202,19 +202,19 @@ class QbitRegister
   BaseType getProbability(unsigned qubit);
 
   // expectation values without state update
-  void expectationValueX(unsigned const qubit, BaseType &sum);
-  void expectationValueY(unsigned const qubit, BaseType &sum);
-  void expectationValueZ(unsigned const qubit, BaseType &sum);
-  void expectationValueXX(unsigned const qubit, unsigned const qubit2, BaseType &sum);
-  void expectationValueXY(unsigned const qubit, unsigned const qubit2, BaseType &sum);
-  void expectationValueXZ(unsigned const qubit, unsigned const qubit2, BaseType &sum);
-  void expectationValueYX(unsigned const qubit, unsigned const qubit2, BaseType &sum);
-  void expectationValueYY(unsigned const qubit, unsigned const qubit2, BaseType &sum);
-  void expectationValueYZ(unsigned const qubit, unsigned const qubit2, BaseType &sum);
-  void expectationValueZX(unsigned const qubit, unsigned const qubit2, BaseType &sum);
-  void expectationValueZY(unsigned const qubit, unsigned const qubit2, BaseType &sum);
-  void expectationValueZZ(unsigned const qubit, unsigned const qubit2, BaseType &sum);
-  void expectationValue(std::vector<unsigned> &qubits, std::vector<unsigned> &observables, BaseType &sum);
+  void expectationValueX(unsigned const qubit, BaseType &sum, BaseType coeff=1.);
+  void expectationValueY(unsigned const qubit, BaseType &sum, BaseType coeff=1.);
+  void expectationValueZ(unsigned const qubit, BaseType &sum, BaseType coeff=1.);
+  void expectationValueXX(unsigned const qubit, unsigned const qubit2, BaseType &sum, BaseType coeff=1.);
+  void expectationValueXY(unsigned const qubit, unsigned const qubit2, BaseType &sum, BaseType coeff=1.);
+  void expectationValueXZ(unsigned const qubit, unsigned const qubit2, BaseType &sum, BaseType coeff=1.);
+  void expectationValueYX(unsigned const qubit, unsigned const qubit2, BaseType &sum, BaseType coeff=1.);
+  void expectationValueYY(unsigned const qubit, unsigned const qubit2, BaseType &sum, BaseType coeff=1.);
+  void expectationValueYZ(unsigned const qubit, unsigned const qubit2, BaseType &sum, BaseType coeff=1.);
+  void expectationValueZX(unsigned const qubit, unsigned const qubit2, BaseType &sum, BaseType coeff=1.);
+  void expectationValueZY(unsigned const qubit, unsigned const qubit2, BaseType &sum, BaseType coeff=1.);
+  void expectationValueZZ(unsigned const qubit, unsigned const qubit2, BaseType &sum, BaseType coeff=1.);
+  void expectationValue(std::vector<unsigned> &qubits, std::vector<unsigned> &observables, BaseType &sum, BaseType coeff=1.);
 
   // utilities
   bool operator==(const QbitRegister &rhs);
