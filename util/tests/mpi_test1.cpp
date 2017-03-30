@@ -26,9 +26,15 @@
  *
  */
 #include "../mpi_wrapper.hpp"
-#include "../omp_wrapper.hpp"
+#include "openmp_affinity_corei7.hpp"
 #include <stdio.h>
 #include <stdexcept>
+
+#ifndef _OPENMP
+qhipster::openmp::AffinityNoOmp affinity;
+#else
+qhipster::openmp::AffinityCoreI7 affinity;
+#endif
 
 
 int main(int argc, char **argv) {
@@ -38,12 +44,13 @@ int main(int argc, char **argv) {
     char processor_name[MPI_MAX_PROCESSOR_NAME];
     int name_len;
 
-    kmp_set_defaults("KMP_AFFINITY=scatter, granularity=fine");
+//    kmp_set_defaults("KMP_AFFINITY=scatter, granularity=fine");
 
     int max_threads = omp_get_max_threads();
     printf("Max available threads %d\n", max_threads);
 
-    omp_set_num_threads(2);
+//    omp_set_num_threads(2);
+    affinity.set_thread_affinity(2);
 
     // Initialize the MPI Framework.
     MPI_Init(NULL,NULL);

@@ -35,8 +35,8 @@ OBJS = $(addsuffix .o, $(basename $(SRC)))
 
 all: mpi_test1.exe omp_test1.exe naive_integral_base.exe omp_integral_base.exe
 
-mpi_test1.exe: mpi_test1.o makefile
-	$(CC) ${CFLAGS} ${LDFLAGS} mpi_test1.o -o mpi_test1.exe
+mpi_test1.exe: mpi_test1.o ../openmp_affinity_corei7.o ../openmp_affinity_noomp.o makefile
+	$(CC) ${CFLAGS} ${LDFLAGS} mpi_test1.o ../openmp_affinity_corei7.o ../openmp_affinity_noomp.o -o mpi_test1.exe
 
 omp_test1.exe: omp_test1.o ../openmp_affinity_corei7.o ../openmp_affinity_noomp.o makefile
 	$(CC) ${CFLAGS} ${LDFLAGS} omp_test1.o ../openmp_affinity_corei7.o ../openmp_affinity_noomp.o -o omp_test1.exe
@@ -55,9 +55,11 @@ depend:
 
 # DO NOT DELETE
 
-mpi_test1.o: ../mpi_wrapper.hpp ../omp_wrapper.hpp
+mpi_test1.o: ../mpi_wrapper.hpp ../openmp_affinity_corei7.hpp
+mpi_test1.o: ../openmp_affinity_v1.hpp
 omp_test1.o: ../openmp_affinity_corei7.hpp ../openmp_affinity_v1.hpp
 omp_test1.o: ../openmp_affinity_noomp.hpp
 omp_integral_base.o: ../openmp_affinity_noomp.hpp ../openmp_affinity_v1.hpp
 omp_integral_base.o: ../openmp_affinity_corei7.hpp
-naive_integral_base.o: ../omp_wrapper.hpp
+naive_integral_base.o: ../openmp_affinity_corei7.hpp
+naive_integral_base.o: ../openmp_affinity_v1.hpp

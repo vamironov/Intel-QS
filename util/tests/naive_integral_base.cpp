@@ -25,7 +25,7 @@
  * This file tests creation/destruction of an OMP session.
  *
  */
-#include "../omp_wrapper.hpp"
+#include "openmp_affinity_corei7.hpp"
 #include <stdexcept>
 #include <stdio.h>
 
