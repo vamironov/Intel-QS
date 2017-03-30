@@ -37,3 +37,7 @@ unsigned AffinityNoOmp::get_num_threads() {
 std::string AffinityNoOmp::get_affinity_string() {
     return "";
 }
+
+#ifndef _OPENMP
+qhipster::openmp::AffinityNoOmp glb_affinity;
+#endif

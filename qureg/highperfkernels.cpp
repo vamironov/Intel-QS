@@ -326,7 +326,7 @@ void Loop_DN(std::size_t gstart, std::size_t gend, std::size_t pos,
   double ttot = 0., tnov = 0., ttmp1, ttmp2;
   ttmp1 = sec();
 
-  std::size_t nthreads = openqu::openmp::omp_get_set_num_threads();
+  std::size_t nthreads = glb_affinity.get_num_threads();
   TODO(Add nthreads check to clamp to smaller number of too little work)
   TODO(Generalize for AVX3 cases so we check for pos <=1 etc)
   TODO(Generalize for AVX3 cases so we check for pos <=1 etc)
@@ -408,7 +408,7 @@ void Loop_TN(Type *state, std::size_t c11, std::size_t c12,
               m11 = m[1][1];
 
   // std::cout << m00 << " " << m01 << " " << m10 << " " << m11 << std::endl;
-  size_t nthreads = openqu::openmp::omp_get_set_num_threads();
+  size_t nthreads = glb_affinity.get_num_threads();
 
   if ((c12 - c11) / c13 >= nthreads) {
 #pragma omp parallel for

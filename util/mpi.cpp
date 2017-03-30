@@ -1,4 +1,4 @@
-// Copyright (C) 2016 Theoretical Physics, ETHZ Zurich
+//ff(/ Copyright (C) 2016 Theoretical Physics, ETHZ Zurich
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,12 +35,10 @@
 #include <vector>
 #endif
 
-#include "openmp_affinity_corei7.hpp"
 #include <iostream>
 #include <iomanip>
 #include <thread>
 
-qhipster::openmp::AffinityCoreI7 core_i7;
 
 #ifdef OPENQU_HAVE_MPI
 openqu::mpi::Environment::Environment(int& argc, char**& argv) : inited_(false)
@@ -135,9 +133,9 @@ openqu::mpi::Environment::Environment(int& argc, char**& argv) : inited_(false)
 //  std::string aff = openqu::openmp::init(0);
 //  int threads_per_rank = openqu::openmp::omp_get_set_num_threads();
 
-  core_i7.set_thread_affinity(2);
-  int threads_per_rank = core_i7.get_num_threads();
-  std::string aff = core_i7.get_affinity_string();
+  glb_affinity.set_thread_affinity(2);
+  int threads_per_rank = glb_affinity.get_num_threads();
+  std::string aff_str = glb_affinity.get_affinity_string();
 
   std::stringstream buffer;
   buffer    <<  "glbrank: " << std::setw(6) << openqu::toString(myrank) 
@@ -145,7 +143,7 @@ openqu::mpi::Environment::Environment(int& argc, char**& argv) : inited_(false)
             <<  " nnodes: " << std::setw(6) << openqu::toString(nnodes) 
             <<  " ranks/node: " << std::setw(6) << openqu::toString(nrankspernode) 
             <<  " threads/rank: " << std::setw(2) << openqu::toString(threads_per_rank) 
-            <<  " aff: " << std::setw(50) << aff
+            <<  " aff: " << std::setw(50) << aff_str
             <<  (useful_rank ? " --useful" : " --dummy");
   openqu::mpi::print(buffer.str(), MPI_COMM_WORLD);
   
@@ -246,7 +244,6 @@ MPI_Comm openqu::mpi::Environment::comm()
 #endif
 
 
-
 #ifdef OPENQU_HAVE_MPI
 
 openqu::mpi::Exception::Exception(int result) : result_(result)
@@ -333,8 +330,6 @@ void openqu::mpi::print(std::string s, MPI_Comm comm)
 #endif  // OPENQU_HAVE_MPI
   } 
 }
-
-
 
 
 MPI_Comm openqu::mpi::Environment::communicator = MPI_COMM_WORLD;

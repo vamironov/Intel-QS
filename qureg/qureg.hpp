@@ -33,8 +33,6 @@
 #include "util/mpi.hpp"
 #include "util/bitops.hpp"
 #include "util/conversion.hpp"
-#include "util/mpi.hpp"
-#include "util/openmp.hpp"
 #include "util/tinymatrix.hpp"
 
 #include <cassert>

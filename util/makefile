@@ -21,7 +21,7 @@
 
 include ../make.inc
 
-SRC := openmp.cpp mpi.cpp utils.cpp openmp_affinity_noomp.cpp openmp_affinity_corei7.cpp
+SRC := mpi.cpp utils.cpp openmp_affinity_noomp.cpp openmp_affinity_corei7.cpp
 OBJ := $(addsuffix .o, $(basename $(SRC)))
 
 %.o : %.cpp makefile
@@ -38,9 +38,10 @@ clean:
 
 # DO NOT DELETE
 
-openmp.o: ../util/openmp.hpp ../util/mpi.hpp ../util/conversion.hpp
-mpi.o: mpi.hpp ../util/bitops.hpp ../util/conversion.hpp
-mpi.o: openmp_affinity_corei7.hpp openmp_affinity_v1.hpp
-utils.o: timer.hpp ../util/utils.hpp ../util/mpi.hpp ../util/conversion.hpp
+mpi.o: mpi.hpp openmp_affinity_noomp.hpp openmp_affinity_v1.hpp
+mpi.o: ../util/bitops.hpp ../util/conversion.hpp
+utils.o: timer.hpp ../util/utils.hpp ../util/mpi.hpp
+utils.o: openmp_affinity_noomp.hpp openmp_affinity_v1.hpp
+utils.o: ../util/conversion.hpp
 openmp_affinity_noomp.o: openmp_affinity_noomp.hpp openmp_affinity_v1.hpp
 openmp_affinity_corei7.o: openmp_affinity_corei7.hpp openmp_affinity_v1.hpp

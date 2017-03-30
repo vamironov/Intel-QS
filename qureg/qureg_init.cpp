@@ -193,7 +193,7 @@ void QbitRegister<Type>::Init(std::string style, std::size_t baseind)
 {
   unsigned myrank = openqu::mpi::Environment::rank();
   unsigned nprocs = openqu::mpi::Environment::size();
-  unsigned nthreads = openqu::openmp::omp_get_set_num_threads();
+  unsigned nthreads = glb_affinity.get_num_threads();
   MPI_Comm comm = openqu::mpi::Environment::comm();
 
   double t0 = time_in_seconds();

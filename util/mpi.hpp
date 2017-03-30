@@ -28,6 +28,14 @@
 #include "mpi.h"
 #endif
 
+#ifdef _OPENMP
+#include "openmp_affinity_corei7.hpp"
+extern qhipster::openmp::AffinityCoreI7 glb_affinity;
+#else
+#include "openmp_affinity_noomp.hpp"
+extern qhipster::openmp::AffinityNoOmp glb_affinity;
+#endif
+
 #include <exception>
 #include <string>
 #include <unistd.h>
@@ -65,7 +73,8 @@ namespace mpi {
 
 class Environment
 {
- public:
+
+  public:
   /** Intialize the MPI Environment
    *
    * passing in the argc and argv arguments passed to the main function.
@@ -115,12 +124,10 @@ class Environment
 #endif
   static void remaprank(int newme);
 
-
-
-
 #ifdef OPENQU_HAVE_MPI
   static MPI_Comm communicator;
 #endif
+
  private:
   bool inited_;
   bool useful_rank;
@@ -128,6 +135,7 @@ class Environment
   static unsigned nnodes;
   static unsigned mynodeid;
   MPI_Request synch_request;
+
 };
 
 /** @brief An MPI barrier

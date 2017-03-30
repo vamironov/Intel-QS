@@ -44,24 +44,28 @@ depend:
 
 qhipster_interface_main.o: ../qureg/qureg.hpp ../qureg/permute.hpp
 qhipster_interface_main.o: ../util/utils.hpp ../util/mpi.hpp
+qhipster_interface_main.o: ../util/openmp_affinity_noomp.hpp
+qhipster_interface_main.o: ../util/openmp_affinity_v1.hpp
 qhipster_interface_main.o: ../util/conversion.hpp ../util/timer.hpp
 qhipster_interface_main.o: ../util/prng_engine.hpp
 qhipster_interface_main.o: ../util/alignedallocator.hpp ../util/bitops.hpp
-qhipster_interface_main.o: ../util/openmp.hpp ../util/tinymatrix.hpp
+qhipster_interface_main.o: ../util/tinymatrix.hpp
 qhipster_interface_main.o: ../qureg/QbitRegisterMetric.hpp
 qhipster_interface_main.o: interface_api_qasm.h
 interface_api_memory.o: ../qureg/qureg.hpp ../qureg/permute.hpp
 interface_api_memory.o: ../util/utils.hpp ../util/mpi.hpp
-interface_api_memory.o: ../util/conversion.hpp ../util/timer.hpp
-interface_api_memory.o: ../util/prng_engine.hpp ../util/alignedallocator.hpp
-interface_api_memory.o: ../util/bitops.hpp ../util/openmp.hpp
+interface_api_memory.o: ../util/openmp_affinity_noomp.hpp
+interface_api_memory.o: ../util/openmp_affinity_v1.hpp ../util/conversion.hpp
+interface_api_memory.o: ../util/timer.hpp ../util/prng_engine.hpp
+interface_api_memory.o: ../util/alignedallocator.hpp ../util/bitops.hpp
 interface_api_memory.o: ../util/tinymatrix.hpp
 interface_api_memory.o: ../qureg/QbitRegisterMetric.hpp
 interface_api_qasm.o: ../qureg/qureg.hpp ../qureg/permute.hpp
 interface_api_qasm.o: ../util/utils.hpp ../util/mpi.hpp
-interface_api_qasm.o: ../util/conversion.hpp ../util/timer.hpp
-interface_api_qasm.o: ../util/prng_engine.hpp ../util/alignedallocator.hpp
-interface_api_qasm.o: ../util/bitops.hpp ../util/openmp.hpp
+interface_api_qasm.o: ../util/openmp_affinity_noomp.hpp
+interface_api_qasm.o: ../util/openmp_affinity_v1.hpp ../util/conversion.hpp
+interface_api_qasm.o: ../util/timer.hpp ../util/prng_engine.hpp
+interface_api_qasm.o: ../util/alignedallocator.hpp ../util/bitops.hpp
 interface_api_qasm.o: ../util/tinymatrix.hpp ../qureg/QbitRegisterMetric.hpp
 interface_api_qasm.o: interface_api_qubitid.h interface_api_version.h
 interface_api_qasm.o: interface_api_memory.h

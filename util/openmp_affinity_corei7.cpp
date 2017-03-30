@@ -24,6 +24,7 @@
 
 using namespace qhipster::openmp;
 
+
 AffinityCoreI7::AffinityCoreI7(){ }
 AffinityCoreI7::~AffinityCoreI7(){ }
 
@@ -59,3 +60,6 @@ std::string AffinityCoreI7::get_affinity_string() {
     return affinity_str;
 }
 
+#ifdef _OPENMP
+qhipster::openmp::AffinityCoreI7 glb_affinity;
+#endif
