@@ -44,12 +44,9 @@ int main(int argc, char **argv) {
     char processor_name[MPI_MAX_PROCESSOR_NAME];
     int name_len;
 
-//    kmp_set_defaults("KMP_AFFINITY=scatter, granularity=fine");
-
     int max_threads = omp_get_max_threads();
     printf("Max available threads %d\n", max_threads);
 
-//    omp_set_num_threads(2);
     affinity.set_thread_affinity(2);
 
     // Initialize the MPI Framework.
