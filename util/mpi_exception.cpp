@@ -18,19 +18,20 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 //------------------------------------------------------------------------------
-#pragma once
-#include <mpi.h>
 #include "mpi_exception.hpp"
+#include <string>
 
-namespace qhipster {
+qhipster::MpiWrapperException::MpiWrapperException(int ec) {
+    char c_err_str[MPI_MAX_ERROR_STRING];
+    int str_len = -1;
 
-class MpiWrapper {
-    public:
-        MpiWrapper(int& argc, char** & argv);
-       ~MpiWrapper();
+    // Decode the error string for the error code.
+    MPI_Error_string(ec,c_err_str,&str_len);
 
-    private:
-        bool bInited;
-};
-
+    // Store the results in our instance variables.
+    _ec_text  = c_err_str;
+    _ec_text.append("dork");
+    _ec_value = ec;
 }
+
+qhipster::MpiWrapperException::~MpiWrapperException() throw() { }

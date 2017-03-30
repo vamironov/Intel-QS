@@ -18,19 +18,12 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 //------------------------------------------------------------------------------
-#pragma once
-#include <mpi.h>
-#include "mpi_exception.hpp"
+#include "mpi_wrapper.hpp"
 
-namespace qhipster {
 
-class MpiWrapper {
-    public:
-        MpiWrapper(int& argc, char** & argv);
-       ~MpiWrapper();
+qhipster::MpiWrapper::MpiWrapper(int &argc, char** & argv) : bInited(false) {
 
-    private:
-        bool bInited;
-};
-
+    QH_MPI_STATUS_CHECK(MPI_Init(&argc,&argv));
 }
+
+qhipster::MpiWrapper::~MpiWrapper() { }

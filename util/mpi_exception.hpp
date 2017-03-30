@@ -20,17 +20,27 @@
 //------------------------------------------------------------------------------
 #pragma once
 #include <mpi.h>
-#include "mpi_exception.hpp"
+#include <exception>
+#include <string>
 
 namespace qhipster {
 
-class MpiWrapper {
+class MpiWrapperException : public std::exception {
     public:
-        MpiWrapper(int& argc, char** & argv);
-       ~MpiWrapper();
+        MpiWrapperException(int);
+        virtual ~MpiWrapperException();
+        virtual const char* what() const throw() { return this->_ec_text.c_str(); }
 
     private:
-        bool bInited;
+        int _ec_value;
+        std::string _ec_text;
 };
 
 }
+
+
+#define QH_MPI_STATUS_CHECK(_api)\
+    {\
+        int _scode = _api;\
+        if (MPI_SUCCESS != _scode) throw qhipster::MpiWrapperException(_scode);\
+    }

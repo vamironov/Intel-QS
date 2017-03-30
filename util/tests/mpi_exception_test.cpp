@@ -18,19 +18,40 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 //------------------------------------------------------------------------------
-#pragma once
-#include <mpi.h>
-#include "mpi_exception.hpp"
 
-namespace qhipster {
+/**
+ * @file mpi_exception_test.cpp
+ *
+ * Test the MPI Wrapper exception handling code.
+ */
+#include "../mpi_wrapper.hpp"
+#include <iostream>
+#include <cassert>
 
-class MpiWrapper {
-    public:
-        MpiWrapper(int& argc, char** & argv);
-       ~MpiWrapper();
 
-    private:
-        bool bInited;
-};
+using namespace std;
 
+
+int main(int argc, char** argv)
+{
+    // Initialize MPI framework.
+    qhipster::MpiWrapper mpi(argc,argv);
+
+    try {
+
+        // Set the error handler for C++ framework calls through the MPI_COMM_WORLD communicator.
+        QH_MPI_STATUS_CHECK(MPI_Errhandler_set(MPI_COMM_WORLD,MPI_ERRORS_RETURN));
+
+        // do something dumb.
+        QH_MPI_STATUS_CHECK((MPI_Bsend(&argc, 1, MPI_INT, 600, 0, MPI_COMM_WORLD)));
+
+        // No more MPI calls allowed after this.
+        QH_MPI_STATUS_CHECK(MPI_Barrier(MPI_COMM_WORLD));
+        QH_MPI_STATUS_CHECK(MPI_Finalize());
+    }
+    catch (exception const& e) {
+        cerr << e.what() << endl;
+    }
+
+  return 0;
 }
