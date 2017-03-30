@@ -21,18 +21,21 @@
 
 all:
 	cd util; make
+	cd util/tests; make
 	cd qureg; make
 	cd tests; make
 	cd interface; make
 
 clean:
 	cd util; make clean
+	cd util/tests; make clean
 	cd qureg; make clean
 	cd tests; make clean
 	cd interface; make clean
 
 depend:
 	cd util; make depend
+	cd util/tests; make depend
 	cd qureg; make depend
 	cd tests; make depend
 	cd interface; make depend
