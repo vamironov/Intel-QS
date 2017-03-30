@@ -27,12 +27,16 @@ namespace qhipster {
 namespace openmp {
 
 class AffinityCoreI7 : public qhipster::openmp::IOmpAffinityV1 {
+    private:
+        std::string affinity_str;
+
     public:
         AffinityCoreI7( );
         ~AffinityCoreI7( );
 
     void set_thread_affinity(int);
     unsigned get_num_threads();
+    std::string get_affinity_string();
 };
 
 }

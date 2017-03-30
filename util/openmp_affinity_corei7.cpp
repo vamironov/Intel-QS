@@ -35,8 +35,8 @@ void AffinityCoreI7::set_thread_affinity(int thread_count) {
     omp_set_num_threads(thread_count);
 
 #if defined(__ICC) || defined(__INTEL_COMPILER)
-    std::string s = "KMP_AFFINITY=compact,1,0,granularity=fine";
-    kmp_set_defaults(s.c_str());
+    affinity_str = "KMP_AFFINITY=compact,1,0,granularity=fine";
+    kmp_set_defaults(affinity_str.c_str());
 #else
 #pragma message("No kmp_set_defaults() function currently implemented for GNU g++")
 #endif
@@ -52,5 +52,10 @@ unsigned AffinityCoreI7::get_num_threads( ) {
         th = omp_get_num_threads();
     }
     return th;
+}
+
+
+std::string AffinityCoreI7::get_affinity_string() {
+    return affinity_str;
 }
 

@@ -39,7 +39,8 @@ clean:
 # DO NOT DELETE
 
 openmp.o: ../util/openmp.hpp ../util/mpi.hpp ../util/conversion.hpp
-mpi.o: mpi.hpp openmp.hpp ../util/bitops.hpp ../util/conversion.hpp
+mpi.o: mpi.hpp ../util/bitops.hpp ../util/conversion.hpp
+mpi.o: openmp_affinity_corei7.hpp openmp_affinity_v1.hpp
 utils.o: timer.hpp ../util/utils.hpp ../util/mpi.hpp ../util/conversion.hpp
 openmp_affinity_noomp.o: openmp_affinity_noomp.hpp openmp_affinity_v1.hpp
 openmp_affinity_corei7.o: openmp_affinity_corei7.hpp openmp_affinity_v1.hpp

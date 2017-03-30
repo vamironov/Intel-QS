@@ -26,12 +26,16 @@ namespace qhipster {
 namespace openmp {
 
 class AffinityNoOmp : public qhipster::openmp::IOmpAffinityV1 {
+    private:
+        std::string affinity_str;
+
     public:
         AffinityNoOmp( );
         ~AffinityNoOmp( );
 
     void set_thread_affinity(int);
     unsigned get_num_threads();
+    std::string get_affinity_string();
 };
 
 }

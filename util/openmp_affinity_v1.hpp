@@ -20,6 +20,7 @@
 //------------------------------------------------------------------------------
 //
 #pragma once
+#include <string>
 
 namespace qhipster {
 namespace openmp {
@@ -33,6 +34,7 @@ class IOmpAffinityV1 {
     // Pure virtual functions.
     virtual void set_thread_affinity(int)  = 0;
     virtual unsigned get_num_threads() = 0;
+    virtual std::string get_affinity_string() = 0;
 };
 
 }

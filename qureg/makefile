@@ -29,7 +29,7 @@ OBJ := $(addsuffix .o, $(basename $(SRC)))
 
 
 all: qHiPSTER.a
-qHiPSTER.a: $(OBJ) ../util/openmp.o ../util/utils.o ../util/mpi.o ../makefile
+qHiPSTER.a: $(OBJ) ../util/openmp.o ../util/utils.o ../util/mpi.o ../util/openmp_affinity_corei7.o ../makefile
 	ar rcs $@ $^
 
 depend:

@@ -23,7 +23,7 @@
 #include "openqu/util/mpi.hpp"
 #else
 #include "mpi.hpp"
-#include "openmp.hpp"
+//#include "openmp.hpp"
 #include "util/bitops.hpp"
 #include "util/conversion.hpp"
 #endif
@@ -35,9 +35,12 @@
 #include <vector>
 #endif
 
+#include "openmp_affinity_corei7.hpp"
 #include <iostream>
 #include <iomanip>
 #include <thread>
+
+qhipster::openmp::AffinityCoreI7 core_i7;
 
 #ifdef OPENQU_HAVE_MPI
 openqu::mpi::Environment::Environment(int& argc, char**& argv) : inited_(false)
@@ -129,8 +132,12 @@ openqu::mpi::Environment::Environment(int& argc, char**& argv) : inited_(false)
 
   
 
-  std::string aff = openqu::openmp::init(0);
-  int threads_per_rank = openqu::openmp::omp_get_set_num_threads();
+//  std::string aff = openqu::openmp::init(0);
+//  int threads_per_rank = openqu::openmp::omp_get_set_num_threads();
+
+  core_i7.set_thread_affinity(2);
+  int threads_per_rank = core_i7.get_num_threads();
+  std::string aff = core_i7.get_affinity_string();
 
   std::stringstream buffer;
   buffer    <<  "glbrank: " << std::setw(6) << openqu::toString(myrank) 

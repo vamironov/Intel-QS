@@ -34,3 +34,6 @@ unsigned AffinityNoOmp::get_num_threads() {
     return 1; 
 }
 
+std::string AffinityNoOmp::get_affinity_string() {
+    return "";
+}
