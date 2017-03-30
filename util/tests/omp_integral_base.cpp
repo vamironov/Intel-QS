@@ -26,7 +26,8 @@
  * Reimann sum approach.
  *
  */
-#include "../omp_wrapper.hpp"
+#include "openmp_affinity_noomp.hpp"
+#include "openmp_affinity_corei7.hpp"
 #include <stdio.h>
 #include <malloc.h>
 #include <math.h>
@@ -35,6 +36,11 @@
 
 #define GET_PI_DEVIATION(v) (M_PI-v)
 
+#ifndef _OPENMP
+qhipster::openmp::AffinityNoOmp affinity;
+#else
+qhipster::openmp::AffinityCoreI7 affinity;
+#endif
 
 /**
  */
@@ -51,7 +57,8 @@ int main(int argc, char **argv) {
     const int global_num_threads = 12;
 
     // Parameter set for the specific architecture.
-    omp_set_num_threads(global_num_threads);
+    //omp_set_num_threads(global_num_threads);
+    affinity.set_thread_affinity(global_num_threads);
 
     // Start performance check.
     auto start = std::chrono::steady_clock::now();

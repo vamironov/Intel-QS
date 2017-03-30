@@ -18,53 +18,22 @@
 // otherwise. Any license under such intellectual property rights must be
 // express and approved by Intel in writing.
 //------------------------------------------------------------------------------
+//
+#pragma once
 
-/**
- * @file mpi_test1.cpp
- *
- * This file tests creation/destruction of an MPI session.
- *
- */
-#include "../mpi_wrapper.hpp"
-#include "../omp_wrapper.hpp"
-#include <stdio.h>
-#include <stdexcept>
+namespace qhipster {
+namespace openmp {
 
+class IOmpAffinityV1 {
 
-int main(int argc, char **argv) {
+    public:
+        IOmpAffinityV1( ) { }
+        virtual ~IOmpAffinityV1( ) { }
 
-    int world_size = 0;
-    int world_rank = 0;
-    char processor_name[MPI_MAX_PROCESSOR_NAME];
-    int name_len;
+    // Pure virtual functions.
+    virtual void set_thread_affinity(int)  = 0;
+    virtual unsigned get_num_threads() = 0;
+};
 
-    kmp_set_defaults("KMP_AFFINITY=scatter, granularity=fine");
-
-    int max_threads = omp_get_max_threads();
-    printf("Max available threads %d\n", max_threads);
-
-    omp_set_num_threads(2);
-
-    // Initialize the MPI Framework.
-    MPI_Init(NULL,NULL);
-
-    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-    MPI_Get_processor_name(processor_name, &name_len);
-
-#pragma omp parallel
-    {
-        int threadID = omp_get_thread_num();
-        printf("GlbID: [%d] Thread [%d]\n", world_rank, threadID);
-
-        int a = 0,b=0,c=0;
-        for(unsigned long i=0;i<2000000000;i++) {
-            unsigned long a = (++b/2) + (++c/2);
-        }
-    }
-
-    // Clean-up the MPI Framework...we're done.
-    MPI_Finalize();
-
-    return 1;
+}
 }

@@ -25,10 +25,17 @@
  * This file tests creation/destruction of an OMP session.
  *
  */
-#include "../omp_wrapper.hpp"
+#include "openmp_affinity_corei7.hpp"
+#include "openmp_affinity_noomp.hpp"
 #include <stdexcept>
 #include <stdio.h>
 
+
+#ifndef _OPENMP
+qhipster::openmp::AffinityNoOmp affinity;
+#else
+qhipster::openmp::AffinityCoreI7 affinity;
+#endif
 
 void print_hello_world(int _id) {
     printf("Hello World [%d]\n", _id);
@@ -37,7 +44,9 @@ void print_hello_world(int _id) {
 
 int main(int argc, char **argv) {
 
-    omp_set_num_threads(8);
+    //omp_set_num_threads(8);
+    affinity.set_thread_affinity(8);
+
 #pragma omp parallel
     {
         int ID = omp_get_thread_num();
