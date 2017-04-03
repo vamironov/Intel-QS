@@ -35,8 +35,8 @@ OBJS = $(addsuffix .o, $(basename $(SRC)))
 
 all: mpi_exception_test.exe mpi_test1.exe omp_test1.exe naive_integral_base.exe omp_integral_base.exe
 
-mpi_test1.exe: mpi_test1.o ../openmp_affinity_corei7.o ../openmp_affinity_noomp.o makefile
-	$(CC) ${CFLAGS} ${LDFLAGS} mpi_test1.o ../openmp_affinity_corei7.o ../openmp_affinity_noomp.o -o mpi_test1.exe
+mpi_test1.exe: mpi_test1.o ../mpi_wrapper.o ../mpi_exception.o makefile
+	$(CC) ${CFLAGS} ${LDFLAGS} mpi_test1.o ../mpi_wrapper.o ../mpi_exception.o -o mpi_test1.exe
 
 omp_test1.exe: omp_test1.o ../openmp_affinity_corei7.o ../openmp_affinity_noomp.o makefile
 	$(CC) ${CFLAGS} ${LDFLAGS} omp_test1.o ../openmp_affinity_corei7.o ../openmp_affinity_noomp.o -o omp_test1.exe
@@ -59,7 +59,6 @@ depend:
 # DO NOT DELETE
 
 mpi_test1.o: ../mpi_wrapper.hpp ../mpi_exception.hpp
-mpi_test1.o: ../openmp_affinity_corei7.hpp ../openmp_affinity_v1.hpp
 mpi_exception_test.o: ../mpi_wrapper.hpp ../mpi_exception.hpp
 omp_test1.o: ../openmp_affinity_corei7.hpp ../openmp_affinity_v1.hpp
 omp_test1.o: ../openmp_affinity_noomp.hpp
