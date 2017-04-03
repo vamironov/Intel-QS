@@ -32,6 +32,7 @@ clean:
 	cd qureg; make clean
 	cd tests; make clean
 	cd interface; make clean
+	rm -fr ./build/
 
 depend:
 	cd util; make depend
