@@ -40,6 +40,36 @@ depend:
 	cd tests; make depend
 	cd interface; make depend
 
+sdk-release: all docs-clean docs-doxy
+	if [ -d "./build" ]; then \
+	    echo Removing pre-existing build directory...; \
+	    rm -fr ./build/* ;\
+	fi
+	mkdir -p ./build/include/qureg
+	mkdir -p ./build/include/util
+	mkdir -p ./build/lib/ia32
+	mkdir -p ./build/lib/ia32_lin
+	mkdir -p ./build/lib/intel64
+	mkdir -p ./build/lib/intel64_lin
+	mkdir -p ./build/lib/intel64_lin_mic
+	mkdir -p ./build/docs
+	cp ./LICENSE.txt ./build/LICENSE.txt
+	cp ./make.inc ./build/
+	cp ./qureg/highperfkernels.hpp ./build/include/qureg/
+	cp ./qureg/permute.hpp ./build/include/qureg/
+	cp ./qureg/QbitRegisterMetric.hpp ./build/include/qureg/
+	cp ./qureg/qureg.hpp ./build/include/qureg
+	cp ./util/alignedallocator.hpp ./build/include/util/
+	cp ./util/bitops.hpp ./build/include/util/
+	cp ./util/conversion.hpp ./build/include/util/
+	cp ./util/mpi.hpp ./build/include/util/
+	cp ./util/prng_engine.hpp ./build/include/util/
+	cp ./util/timer.hpp ./build/include/util/
+	cp ./util/tinymatrix.hpp ./build/include/util/
+	cp ./util/utils.hpp ./build/include/util/
+	cp ./qureg/qHiPSTER.a ./build/lib/intel64/
+	cp -R ./docs/html ./build/docs/
+
 docs-clean:
 	rm -fr docs/html/
 
