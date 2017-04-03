@@ -41,7 +41,7 @@ depend:
 	cd tests; make depend
 	cd interface; make depend
 
-sdk-release: all sdk-copy-sources docs-sdk
+sdk-release: all sdk-copy-sources sdk-copy-libs sdk-copy-samples sdk-gen-docs 
 	@echo Done.
 
 sdk-copy-sources:
@@ -72,8 +72,17 @@ sdk-copy-sources:
 	@cp ./util/timer.hpp ./build/include/util/
 	@cp ./util/tinymatrix.hpp ./build/include/util/
 	@cp ./util/utils.hpp ./build/include/util/
-	@cp ./qureg/qHiPSTER.a ./build/lib/intel64/
 	@cp ./makefile.sdk ./build/makefile
+
+sdk-copy-libs:
+	@cp ./qureg/qHiPSTER.a ./build/lib/intel64/
+
+sdk-copy-samples:
+	@echo Copying sample files...
+	@mkdir -p ./build/samples/
+	@cp tests/qft_test.cpp ./build/samples/qft_test.cpp 
+	@cp tests/testgates.cpp ./build/samples/testgates.cpp
+	@cp tests/benchgates.cpp ./build/samples/benchgates.cpp
 
 docs-clean:
 	rm -fr docs/html/
@@ -81,6 +90,6 @@ docs-clean:
 docs-doxy:
 	doxygen -s docs/doxy-html.config
 
-docs-sdk:
+sdk-gen-docs:
 	cp docs/doxy-html.config ./build/
 	cd build; doxygen -s ./doxy-html.config; rm -f ./doxy-html.config
