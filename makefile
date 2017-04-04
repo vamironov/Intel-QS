@@ -71,6 +71,9 @@ sdk-copy-sources:
 	@cp ./util/timer.hpp ./build/include/util/
 	@cp ./util/tinymatrix.hpp ./build/include/util/
 	@cp ./util/utils.hpp ./build/include/util/
+	@cp ./util/openmp_affinity_v1.hpp ./build/include/util/
+	@cp ./util/openmp_affinity_corei7.hpp ./build/include/util/
+	@cp ./util/openmp_affinity_noomp.hpp ./build/include/util/
 	@cp ./makefile.sdk ./build/makefile
 
 sdk-copy-libs:
