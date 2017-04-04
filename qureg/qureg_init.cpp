@@ -230,7 +230,7 @@ TODO(Remember to find 'omp parallel for simd' equivalent for gcc)
 #elif 0 
 // --------------------- FIXME by Gian: MIT prng_engine excluded form the choices
   // Parallel initialization using open source parallel RNG
-  std::vector<sitmo::prng_engine> eng(openqu::openmp::omp_get_set_num_threads());
+//  std::vector<sitmo::prng_engine> eng(openqu::openmp::omp_get_set_num_threads());
 #pragma omp parallel reduction(+ : local_normsq)
   {
 #ifdef _OPENMP

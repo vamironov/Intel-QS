@@ -68,7 +68,6 @@ sdk-copy-sources:
 	@cp ./util/bitops.hpp ./build/include/util/
 	@cp ./util/conversion.hpp ./build/include/util/
 	@cp ./util/mpi.hpp ./build/include/util/
-	@cp ./util/prng_engine.hpp ./build/include/util/
 	@cp ./util/timer.hpp ./build/include/util/
 	@cp ./util/tinymatrix.hpp ./build/include/util/
 	@cp ./util/utils.hpp ./build/include/util/

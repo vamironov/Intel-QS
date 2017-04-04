@@ -19,10 +19,6 @@
 #include "util/utils.hpp"
 #include "util/timer.hpp"
 
-// --------- FIXME by Gian: this random-number-generator should be eliminated ----
-#include "util/prng_engine.hpp"
-// -------------------------------------------------------------------------------
-
 #include "util/alignedallocator.hpp"
 #include "util/mpi.hpp"
 #include "util/bitops.hpp"
