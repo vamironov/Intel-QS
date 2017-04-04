@@ -44,33 +44,11 @@ namespace openqu {
 
 namespace mpi {
 
-/** Similar to Boost.MPI, but substantially slimmed down, the @c Environment
-  * class is used to initialize, finalize, and
- *  query the MPI Environment. It will typically be used in the @c
- *  main() function of a program, which will create a single instance
- *  of @c Environment initialized with the arguments passed to the
- *  program:
- *
- *  @code
- *  int main(int argc, char* argv[])
- *  {
- *    mpi::Environment env(argc, argv);
- *  }
- *  @endcode
- *
- *  The instance of @c Environment will initialize MPI (by calling @c
- *  MPI_Init) in its constructor and finalize MPI (by calling @c
- *  MPI_Finalize for normal termination or @c MPI_Abort for an
- *  uncaught exception) in its destructor.
- *
- *  The use of @c Environment is not mandatory. Users may choose to
- *  invoke @c MPI_Init and @c MPI_Finalize manually. In this case, no
- *  @c Environment object is needed. If one is created, however, it
- *  will do nothing on either construction or destruction.
- *
- * If no MPI library is present this class will still work.
+/**
+ * A trimmed down version of the BOOST::MPI environment.  It's purpose is to 
+ * initialize the MPI library and partition the cluster or single threaded
+ * environment for parallel operations.
  */
-
 class Environment
 {
 
