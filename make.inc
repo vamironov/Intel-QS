@@ -54,8 +54,9 @@ endif
 
 ########### added by Gian for PCL mini-cluster #################################
 ifeq ($(HOST),pcl-hsw1.sc.intel.com)
-INC += -I/home/gian/matsuura_bay-qhipster
-MKLROOT = /swtools/intel/mkl
+PATH := ${PATH}:/swtools/intel/bin
+INC += -I/home/gian/matsuura_bay-qhipster -I/swtools/intel/mkl/include/
+MKLROOT = /swtools/intel/mkl/
 CFLAGS += -mkl
 endif
 ################################################################################

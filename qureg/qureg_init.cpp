@@ -286,7 +286,7 @@ TODO(Remember to find 'omp parallel for simd' equivalent for gcc)
       state[lclind] = {1.0, 0.0};
     }
 // --------------------- added by Gian: beginning
-   } else if (style == "++++") {
+  } else if (style == "++++") {
 
     state[0] = {1./std::sqrt( globalSize() ),0.};
     for (std::size_t i = 1; i < localSize(); i++) {
