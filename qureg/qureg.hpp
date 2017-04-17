@@ -239,3 +239,8 @@ using BaseType = typename QbitRegister<Type>::BaseType;
 //
 #include "QbitRegisterMetric.hpp"
 
+//
+// Derived class of QbitRegister that automatically implements noise gates.
+//
+#include "NoisyQureg.hpp"
+

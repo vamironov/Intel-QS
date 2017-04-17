@@ -28,7 +28,7 @@ namespace qhipster {
 class MpiWrapperException : public std::exception {
     public:
         MpiWrapperException(int);
-        virtual ~MpiWrapperException();
+        virtual ~MpiWrapperException() throw();
         virtual const char* what() const throw() { return this->_ec_text.c_str(); }
 
     private:
