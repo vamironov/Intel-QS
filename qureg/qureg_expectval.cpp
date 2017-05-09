@@ -566,6 +566,7 @@ void QbitRegister<Type>::expectationValue(std::vector<unsigned> &qubits, std::ve
   }  
 }
 
-
 template class QbitRegister<ComplexSP>;
 template class QbitRegister<ComplexDP>;
+
+/** @}*/

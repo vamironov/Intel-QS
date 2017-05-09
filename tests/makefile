@@ -16,7 +16,7 @@ benchgates.exe: benchgates.o makefile ../qureg/qHiPSTER.a
 	$(CC) -o benchgates.exe ${CFLAGS} benchgates.o ${LDFLAGS} ../qureg/qHiPSTER.a
 testgates.exe: testgates.o makefile ../qureg/qHiPSTER.a
 	$(CC) -o testgates.exe ${CFLAGS} testgates.o ${LDFLAGS} ../qureg/qHiPSTER.a
-qft_test.exe: qft_test.o makefile ../qureg/qHiPSTER.a
+qft_test.exe: qft_test.o makefile  ../qureg/qHiPSTER.a
 	$(CC) -o qft_test.exe ${CFLAGS} qft_test.o ${LDFLAGS} ../qureg/qHiPSTER.a
 expect_value_test.exe: expect_value_test.o makefile ../qureg/qHiPSTER.a
 	$(CC) -o expect_value_test.exe ${CFLAGS} expect_value_test.o ${LDFLAGS} ../qureg/qHiPSTER.a

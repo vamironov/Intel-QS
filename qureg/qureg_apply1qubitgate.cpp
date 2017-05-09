@@ -22,6 +22,14 @@
 #include "qureg.hpp"
 #include "highperfkernels.hpp"
 
+/** \addtogroup qureg
+ *  @{
+ */
+
+/** @file qureg_apply1qubitgate.cpp
+ *  @brief Define the @c QbitRegister methods corresponding to the application of single-qubit gates.
+ */
+
 template <class Type>
 double QbitRegister<Type>::HP_Distrpair(unsigned pos, TM2x2<Type> const&m)
 {
@@ -230,6 +238,16 @@ void QbitRegister<Type>::apply1QubitGate(unsigned qubit, TM2x2<Type> const&m)
 
 
 
+/**
+ * @brief Rotation around the X axis by an angle theta
+ * @param qubit index of the involved qubit
+ * @param theta rotation angle
+ *
+ * Explicitely, the gate corresponds to:\n
+ *     exp( -i X theta/2 )\n
+ * This convention is based on the fact that the generators
+ * of rotations for spin-1/2 spins are {X/2, Y/2, Z/2}.
+ */
 template <class Type>
 void QbitRegister<Type>::applyRotationX(unsigned const qubit, BaseType theta)
 {
@@ -240,6 +258,16 @@ void QbitRegister<Type>::applyRotationX(unsigned const qubit, BaseType theta)
 
 }
 
+/**
+ * @brief Rotation around the Y axis by an angle theta
+ * @param qubit index of the involved qubit
+ * @param theta rotation angle
+ *
+ * Explicitely, the gate corresponds to:\n
+ *     exp( -i Y theta/2 )\n
+ * This convention is based on the fact that the generators
+ * of rotations for spin-1/2 spins are {X/2, Y/2, Z/2}.
+ */
 template <class Type>
 void QbitRegister<Type>::applyRotationY(unsigned const qubit, BaseType theta)
 {
@@ -250,6 +278,16 @@ void QbitRegister<Type>::applyRotationY(unsigned const qubit, BaseType theta)
   apply1QubitGate(qubit, ry);
 }
 
+/**
+ * @brief Rotation around the Z axis by an angle theta
+ * @param qubit index of the involved qubit
+ * @param theta rotation angle
+ *
+ * Explicitely, the gate corresponds to:\n
+ *     exp( -i Z theta/2 )\n
+ * This convention is based on the fact that the generators
+ * of rotations for spin-1/2 spins are {X/2, Y/2, Z/2}.
+ */
 template <class Type>
 void QbitRegister<Type>::applyRotationZ(unsigned const qubit, BaseType theta)
 {
@@ -260,6 +298,13 @@ void QbitRegister<Type>::applyRotationZ(unsigned const qubit, BaseType theta)
   apply1QubitGate(qubit, rz);
 }
 
+/**
+ * @brief Apply X Pauli operator
+ * @param qubit index of the involved qubit
+ *
+ * Explicitely, the gate corresponds to:\n
+ *     i * exp( -i X pi/2 ) = X 
+ */
 template <class Type>
 void QbitRegister<Type>::applyPauliX(unsigned const qubit)
 {
@@ -271,6 +316,13 @@ void QbitRegister<Type>::applyPauliX(unsigned const qubit)
   apply1QubitGate(qubit, px);
 }
 
+/**
+ * @brief Apply square root of the X Pauli operator
+ * @param qubit index of the involved qubit
+ *
+ * Explicitely, the gate corresponds to:\n
+ *     sqrt(X) 
+ */
 template <class Type>
 void QbitRegister<Type>::applyPauliSqrtX(unsigned const qubit)
 {
@@ -282,6 +334,13 @@ void QbitRegister<Type>::applyPauliSqrtX(unsigned const qubit)
   apply1QubitGate(qubit, px);
 }
 
+/**
+ * @brief Apply Y Pauli operator
+ * @param qubit index of the involved qubit
+ *
+ * Explicitely, the gate corresponds to:\n
+ *     i * exp( -i Y pi/2 ) = Y 
+ */
 template <class Type>
 void QbitRegister<Type>::applyPauliY(unsigned const qubit)
 {
@@ -293,6 +352,13 @@ void QbitRegister<Type>::applyPauliY(unsigned const qubit)
   apply1QubitGate(qubit, py);
 }
 
+/**
+ * @brief Apply square root of the Y Pauli operator
+ * @param qubit index of the involved qubit
+ *
+ * Explicitely, the gate corresponds to:\n
+ *     sqrt(Y) 
+ */
 template <class Type>
 void QbitRegister<Type>::applyPauliSqrtY(unsigned const qubit)
 {
@@ -304,6 +370,13 @@ void QbitRegister<Type>::applyPauliSqrtY(unsigned const qubit)
   apply1QubitGate(qubit, py);
 }
 
+/**
+ * @brief Apply Z Pauli operator
+ * @param qubit index of the involved qubit
+ *
+ * Explicitely, the gate corresponds to:\n
+ *     i * exp( -i Z pi/2 ) = Z 
+ */
 template <class Type>
 void QbitRegister<Type>::applyPauliZ(unsigned const qubit)
 {
@@ -315,6 +388,13 @@ void QbitRegister<Type>::applyPauliZ(unsigned const qubit)
   apply1QubitGate(qubit, pz);
 }
 
+/**
+ * @brief Apply square root of the Z Pauli operator
+ * @param qubit index of the involved qubit
+ *
+ * Explicitely, the gate corresponds to:\n
+ *     sqrt(Z) 
+ */
 template <class Type>
 void QbitRegister<Type>::applyPauliSqrtZ(unsigned const qubit)
 {
@@ -327,6 +407,14 @@ void QbitRegister<Type>::applyPauliSqrtZ(unsigned const qubit)
 }
 
 
+/**
+ * @brief Apply Hadamard gate
+ * @param qubit index of the involved qubit
+ *
+ * Explicitely, the gate corresponds to the 2x2 matrix:\n
+ *     | 1/sqrt(2)   1/sqrt(2) |\n
+ *     | 1/sqrt(2)  -1/sqrt(2) |
+ */
 template <class Type>
 void QbitRegister<Type>::applyHadamard(unsigned const qubit)
 {
@@ -337,6 +425,14 @@ void QbitRegister<Type>::applyHadamard(unsigned const qubit)
   apply1QubitGate(qubit, h);
 }
 
+/**
+ * @brief Apply T gate
+ * @param qubit index of the involved qubit
+ *
+ * Explicitely, the gate corresponds to the 2x2 matrix:\n
+ *     | 1              0           |\n
+ *     | 0    cos(pi/4)+i*sin(pi/4) |
+ */
 template <class Type>
 void QbitRegister<Type>::applyT(unsigned const qubit)
 {
@@ -351,3 +447,5 @@ void QbitRegister<Type>::applyT(unsigned const qubit)
 
 template class QbitRegister<ComplexSP>;
 template class QbitRegister<ComplexDP>;
+
+/** @}*/
