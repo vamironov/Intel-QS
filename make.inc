@@ -18,8 +18,8 @@ HOST = $(shell hostname)
 
 ifneq ($(HOST),ccefw-desktop)
 CC = g++
-CC = mpicxx 
 CC = CC -mkl -no-ipo
+CC = mpicxx
 CC = mpiicpc 
 else
 ########### Modified for the ccefw-desktop.jf.intel.com environment ############
@@ -38,7 +38,8 @@ VECS = -qopt-report-phase=vec -qopt-report=2
 DEFS = -DUSE_MM_MALLOC -DSTANDALONE -DOPENQU_HAVE_MPI -DMKL_ILP64
 
 CFLAGS = ${OPTS} ${DEFS} \
-         -Wall -std=c++11 -fasm-blocks -qopenmp -restrict
+         -Wall -std=c++11 -openmp #-restrict \
+# -fasm-blocks
 
 CFLAGS += ${OPTFLAGS}  
 

@@ -8,7 +8,7 @@ ifdef memcheck
  LDFLAGS := ${LDFLAGS} /home/msmelyan/valgrind-3.11.0/installed/lib/valgrind/libmpiwrap-amd64-linux.so
 endif
 
-EXECS := benchgates.exe testgates.exe qft_test.exe
+EXECS := benchgates.exe testgates.exe qft_test.exe expect_value_test.exe
 
 all: ${EXECS}
 
@@ -18,6 +18,8 @@ testgates.exe: testgates.o makefile ../qureg/qHiPSTER.a
 	$(CC) -o testgates.exe ${CFLAGS} testgates.o ${LDFLAGS} ../qureg/qHiPSTER.a
 qft_test.exe: qft_test.o makefile ../qureg/qHiPSTER.a
 	$(CC) -o qft_test.exe ${CFLAGS} qft_test.o ${LDFLAGS} ../qureg/qHiPSTER.a
+expect_value_test.exe: expect_value_test.o makefile ../qureg/qHiPSTER.a
+	$(CC) -o expect_value_test.exe ${CFLAGS} expect_value_test.o ${LDFLAGS} ../qureg/qHiPSTER.a
 
 %.o : %.cpp makefile
 	$(CC) ${CFLAGS} ${INC} ${LDFLAGS} -c $< -o $@

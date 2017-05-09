@@ -21,6 +21,24 @@
 
 #include "qureg.hpp"
 
+/** \addtogroup qureg
+ *  @{
+ */
+
+/** @file qureg_measure.cpp
+ *  @brief Define the @c QbitRegister methods related to measurement operations.
+ */
+
+/**
+ * @brief Return 'true' if qubit is separable and in a computational state.
+ * @param qubit the index of the involved qubit
+ * @param tolerance the tolerance of the total probability of opposite outcome
+ * @return 'true'  if bit is separable and in computational state\n
+ *         'false' otherwise
+ *
+ * Function to check if one qubit is in a (separable) classical state.
+ */
+
 template <class Type>
 bool QbitRegister<Type>::isClassicalBit(unsigned qubit, BaseType tolerance) const
 {
@@ -65,6 +83,16 @@ bool QbitRegister<Type>::isClassicalBit(unsigned qubit, BaseType tolerance) cons
 
 }
 
+/**
+ * @brief Collapse the wavefunction as if qubit was measured in the computational basis.
+ * @param qubit the index of the involved qubit
+ * @param value boolean corresponing to: 'false'=|0> and 'true'=|1>
+ *
+ * Depending on the measurement outcome, provided here through the boolean value
+ * 'false'=|0> and 'true'=|1>, half of the amplitudes are resetted to zero.
+ * Notice that the state notmalization is not preserved.
+ */
+
 template <class Type>
 void QbitRegister<Type>::collapseQubit(unsigned qubit, bool value)
 {
@@ -86,6 +114,14 @@ void QbitRegister<Type>::collapseQubit(unsigned qubit, bool value)
     }
   }
 }
+
+/**
+ * @brief Return the probability of outcome '-1' when Pauli Z is measured on the qubit.
+ * @param qubit the index of the involved qubit
+ *
+ * Return the probability corresponding to the qubit being in state |1>.
+ * The state is left unchanged and not collapsed.
+ */
 
 template <class Type>
 QbitRegister<Type>::BaseType QbitRegister<Type>::getProbability(unsigned qubit)
@@ -114,6 +150,11 @@ QbitRegister<Type>::BaseType QbitRegister<Type>::getProbability(unsigned qubit)
   return global_P;
 
 }
+
+/**
+ * @brief ?? explanation needed ??
+ *
+ */
 
 template <class Type>
 bool QbitRegister<Type>::getClassicalValue(unsigned qubit, BaseType tolerance) const
@@ -156,3 +197,4 @@ bool QbitRegister<Type>::getClassicalValue(unsigned qubit, BaseType tolerance) c
 template class QbitRegister<ComplexSP>;
 template class QbitRegister<ComplexDP>;
 
+/** @}*/

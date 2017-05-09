@@ -23,7 +23,23 @@
 
 #include "qureg.hpp"
 
+/** \addtogroup qureg
+ *  @{
+ */
 
+/** @file qureg_expectval.cpp
+ *  @brief Define the @c QbitRegister methods related to expectation values of Pauli strings.
+ */
+
+/**
+ * @brief Compute expectation value of Pauli X for qubit over the full-register state
+ * @param qubit index of the involved qubit
+ * @param sum contains the initial value to which the expectation value will be added
+ * @param coeff scalar coefficient that multiplies the expectation value
+ *
+ * At the end of the function, the variable 'sum' is updated via:\n
+ *     sum --> sum + coeff * <psi| X_qubit |psi>
+ */
 //------------------------------------------------------------------------------
 template <class Type>
 void QbitRegister<Type>::expectationValueX(unsigned qubit, BaseType &sum, BaseType coeff)
@@ -66,6 +82,16 @@ void QbitRegister<Type>::expectationValueX(unsigned qubit, BaseType &sum)
 }
 #endif
 
+
+/**
+ * @brief Compute expectation value of Pauli Y for qubit over the full-register state
+ * @param qubit index of the involved qubit
+ * @param sum contains the initial value to which the expectation value will be added
+ * @param coeff scalar coefficient that multiplies the expectation value
+ *
+ * At the end of the function, the variable 'sum' is updated via:\n
+ *     sum --> sum + coeff * <psi| Y_qubit |psi>
+ */
 //------------------------------------------------------------------------------
 template <class Type>
 void QbitRegister<Type>::expectationValueY(unsigned qubit, BaseType &sum, BaseType coeff)
@@ -87,7 +113,15 @@ void QbitRegister<Type>::expectationValueY(unsigned qubit, BaseType &sum, BaseTy
 }
 
 
-
+/**
+ * @brief Compute expectation value of Pauli Z for qubit over the full-register state
+ * @param qubit index of the involved qubit
+ * @param sum contains the initial value to which the expectation value will be added
+ * @param coeff scalar coefficient that multiplies the expectation value
+ *
+ * At the end of the function, the variable 'sum' is updated via:\n
+ *     sum --> sum + coeff * <psi| Z_qubit |psi>
+ */
 //------------------------------------------------------------------------------
 template <class Type>
 void QbitRegister<Type>::expectationValueZ(unsigned qubit, BaseType &sum, BaseType coeff)
@@ -96,6 +130,16 @@ void QbitRegister<Type>::expectationValueZ(unsigned qubit, BaseType &sum, BaseTy
 }
 
 
+/**
+ * @brief Compute expectation value of Pauli X.X for two qubits over the full-register state
+ * @param qubit index of the first qubit
+ * @param qubit2 index of the second qubit
+ * @param sum contains the initial value to which the expectation value will be added
+ * @param coeff scalar coefficient that multiplies the expectation value
+ *
+ * At the end of the function, the variable 'sum' is updated via:\n
+ *     sum --> sum + coeff * <psi| X_qubit.X_qubit2 |psi>
+ */
 //------------------------------------------------------------------------------
 template <class Type>
 void QbitRegister<Type>::expectationValueXX(unsigned qubit, unsigned qubit2, BaseType &sum, BaseType coeff)
@@ -129,6 +173,16 @@ void QbitRegister<Type>::expectationValueXX(unsigned qubit, unsigned qubit2, Bas
 }
 
 
+/**
+ * @brief Compute expectation value of Pauli Y.X for two qubits over the full-register state
+ * @param qubit index of the first qubit
+ * @param qubit2 index of the second qubit
+ * @param sum contains the initial value to which the expectation value will be added
+ * @param coeff scalar coefficient that multiplies the expectation value
+ *
+ * At the end of the function, the variable 'sum' is updated via:\n
+ *     sum --> sum + coeff * <psi| Y_qubit.X_qubit2 |psi>
+ */
 //------------------------------------------------------------------------------
 // TODO : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
 //        this code uses the standard 00-01-10-11 despite this being opposite to backend storage convention
@@ -166,6 +220,16 @@ void QbitRegister<Type>::expectationValueYX(unsigned qubit, unsigned qubit2, Bas
 }
 
 
+/**
+ * @brief Compute expectation value of Pauli Z.X for two qubits over the full-register state
+ * @param qubit index of the first qubit
+ * @param qubit2 index of the second qubit
+ * @param sum contains the initial value to which the expectation value will be added
+ * @param coeff scalar coefficient that multiplies the expectation value
+ *
+ * At the end of the function, the variable 'sum' is updated via:\n
+ *     sum --> sum + coeff * <psi| Z_qubit.X_qubit2 |psi>
+ */
 //------------------------------------------------------------------------------
 // TODO : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
 //        this code uses the standard 00-01-10-11 despite this being opposite to backend storage convention
@@ -203,6 +267,16 @@ void QbitRegister<Type>::expectationValueZX(unsigned qubit, unsigned qubit2, Bas
 }
 
 
+/**
+ * @brief Compute expectation value of Pauli Y.X for two qubits over the full-register state
+ * @param qubit index of the first qubit
+ * @param qubit2 index of the second qubit
+ * @param sum contains the initial value to which the expectation value will be added
+ * @param coeff scalar coefficient that multiplies the expectation value
+ *
+ * At the end of the function, the variable 'sum' is updated via:\n
+ *     sum --> sum + coeff * <psi| Y_qubit.X_qubit2 |psi>
+ */
 //------------------------------------------------------------------------------
 // TODO : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
 //        this code uses the standard 00-01-10-11 despite this being opposite to backend storage convention
@@ -213,6 +287,16 @@ void QbitRegister<Type>::expectationValueXY(unsigned qubit, unsigned qubit2, Bas
 }
 
 
+/**
+ * @brief Compute expectation value of Pauli Y.Y for two qubits over the full-register state
+ * @param qubit index of the first qubit
+ * @param qubit2 index of the second qubit
+ * @param sum contains the initial value to which the expectation value will be added
+ * @param coeff scalar coefficient that multiplies the expectation value
+ *
+ * At the end of the function, the variable 'sum' is updated via:\n
+ *     sum --> sum + coeff * <psi| Y_qubit.Y_qubit2 |psi>
+ */
 //------------------------------------------------------------------------------
 template <class Type>
 void QbitRegister<Type>::expectationValueYY(unsigned qubit, unsigned qubit2, BaseType &sum, BaseType coeff)
@@ -248,6 +332,16 @@ void QbitRegister<Type>::expectationValueYY(unsigned qubit, unsigned qubit2, Bas
 }
 
 
+/**
+ * @brief Compute expectation value of Pauli Z.Y for two qubits over the full-register state
+ * @param qubit index of the first qubit
+ * @param qubit2 index of the second qubit
+ * @param sum contains the initial value to which the expectation value will be added
+ * @param coeff scalar coefficient that multiplies the expectation value
+ *
+ * At the end of the function, the variable 'sum' is updated via:\n
+ *     sum --> sum + coeff * <psi| Z_qubit.Y_qubit2 |psi>
+ */
 //------------------------------------------------------------------------------
 // TODO : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
 //        this code uses the standard 00-01-10-11 despite this being opposite to backend storage convention
@@ -285,6 +379,16 @@ void QbitRegister<Type>::expectationValueZY(unsigned qubit, unsigned qubit2, Bas
 }
 
 
+/**
+ * @brief Compute expectation value of Pauli X.Z for two qubits over the full-register state
+ * @param qubit index of the first qubit
+ * @param qubit2 index of the second qubit
+ * @param sum contains the initial value to which the expectation value will be added
+ * @param coeff scalar coefficient that multiplies the expectation value
+ *
+ * At the end of the function, the variable 'sum' is updated via:\n
+ *     sum --> sum + coeff * <psi| X_qubit.Z_qubit2 |psi>
+ */
 //------------------------------------------------------------------------------
 // TODO : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
 //        this code uses the standard 00-01-10-11 despite this being opposite to backend storage convention
@@ -295,6 +399,16 @@ void QbitRegister<Type>::expectationValueXZ(unsigned qubit, unsigned qubit2, Bas
 }
 
 
+/**
+ * @brief Compute expectation value of Pauli Y.Z for two qubits over the full-register state
+ * @param qubit index of the first qubit
+ * @param qubit2 index of the second qubit
+ * @param sum contains the initial value to which the expectation value will be added
+ * @param coeff scalar coefficient that multiplies the expectation value
+ *
+ * At the end of the function, the variable 'sum' is updated via:\n
+ *     sum --> sum + coeff * <psi| Y_qubit.Z_qubit2 |psi>
+ */
 //------------------------------------------------------------------------------
 // TODO : check how the basis is it is: 00-01-10-11 or 00-10-01-11 !!!!
 //        this code uses the standard 00-01-10-11 despite this being opposite to backend storage convention
@@ -305,6 +419,16 @@ void QbitRegister<Type>::expectationValueYZ(unsigned qubit, unsigned qubit2, Bas
 }
 
 
+/**
+ * @brief Compute expectation value of Pauli Z.Z for two qubits over the full-register state
+ * @param qubit index of the first qubit
+ * @param qubit2 index of the second qubit
+ * @param sum contains the initial value to which the expectation value will be added
+ * @param coeff scalar coefficient that multiplies the expectation value
+ *
+ * At the end of the function, the variable 'sum' is updated via:\n
+ *     sum --> sum + coeff * <psi| Z_qubit.Z_qubit2 |psi>
+ */
 //------------------------------------------------------------------------------
 template <class Type>
 void QbitRegister<Type>::expectationValueZZ(unsigned qubit, unsigned qubit2, BaseType &sum, BaseType coeff)
@@ -353,6 +477,20 @@ std::size_t Hamming_weight(std::size_t x)
 }
 
 
+/**
+ * @brief Compute expectation value of a Pauli string for multiple qubits over the full-register state
+ * @param qubits vector of the involved qubit indices
+ * @param observables vector of the involved pauli operators {1,2,3} -> {X,Y,Z}
+ * @param sum contains the initial value to which the expectation value will be added
+ * @param coeff scalar coefficient that multiplies the expectation value
+ *
+ * At the end of the function, the variable 'sum' is updated via:\n
+ *     sum --> sum + coeff * <psi| Pauli_String |psi>\n
+ * where the Pauli_String is defined by:\n
+ *     observables[0]_qubit[0] . observables[1]_qubit[1] ...\n
+ * and each Pauli operator is encoded according to:\n
+ *     {1,2,3} --> {X,Y,Z}
+ */
 //------------------------------------------------------------------------------
 // observable:  1==PauliX , 2==PauliY , 3==PauliZ
 template <class Type>
