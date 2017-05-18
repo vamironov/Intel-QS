@@ -205,6 +205,8 @@ class QbitRegister
   std::vector<double> googleStats();
   void normalize();
   BaseType computenorm();
+  Type compute_overlap( QbitRegister<Type> &psi );
+
   void Print(std::string x, std::vector<std::size_t> qbits = {});
 
   double HP_Distrpair(unsigned pos, TM2x2<Type> const&m);

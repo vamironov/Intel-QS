@@ -35,6 +35,8 @@ class NoisyQureg : public QbitRegister<Type> {
     typedef typename QbitRegister<Type>::BaseType BaseType;
 
     std::vector<BaseType> TimeFromLastGate;		// given in terms of the chosen time unit
+    BaseType TimeOneQubitLogicalGate = 1.;
+    BaseType TimeTwoQubitLogicalGate = 1.;
 
     unsigned OneQubitLogicalGateCount=0;
     unsigned TwoQubitLogicalGateCount=0;
@@ -44,24 +46,37 @@ class NoisyQureg : public QbitRegister<Type> {
     BaseType T_2 = 100;					// T_2   given in terms of the chosen time unit
     BaseType T_phi = 1./( 1./T_2 - 1./(2.*T_1) );	// T_phi given in terms of the chosen time unit
 
-    // corresponding standard distributions for the rotation angles of the noise gates
-    std::normal_distribution<BaseType> gaussian_RNG ;
+    // pseudo random-number-generator to sample from normal distribution
+    // (for the rotation angles of the noise gates)
+    std::default_random_engine generator;
+    std::normal_distribution<BaseType> gaussian_RNG{0.,1.} ;
     
 
   public :
 
-    // Constructor
-    NoisyQureg<Type>(unsigned Nqubits , unsigned RNG_seed=12345) :
-        QbitRegister<Type>(Nqubits) , _gaussian(0.0,1.0)
+    /// Constructor
+    NoisyQureg<Type>(unsigned Nqubits , unsigned RNG_seed=12345 ,
+                     BaseType T1=2000 , BaseType T2=1000 ) :
+        QbitRegister<Type>(Nqubits)
     {
+      T_1 = T1;
+      T_2 = T2;
       TimeFromLastGate.assign(Nqubits,0.);
 
       // initialization of the seed for the generation of the noise gate parameters
-      srand48( RNG_seed );
+      generator.seed( RNG_seed );
+//      srand48( RNG_seed );
     }
 
-    // Default destructor
+    /// Default destructor
     ~NoisyQureg<Type>() {};
+
+    // Utilities
+    void reset_time_for_all_qubits();
+    void apply_noise_gates_on_all_qubits();
+
+    // Noise model
+    void update_noise_model(BaseType, BaseType);
 
     // Get stats
     unsigned GetTotalQubitLogicalGateCount();
@@ -71,9 +86,10 @@ class NoisyQureg : public QbitRegister<Type> {
     // Reset decoherence time and implement noise gate
     void AddNoiseOneQubitGate(unsigned const);
     void AddNoiseTwoQubitGate(unsigned const, unsigned const);
-    void NoiseGate(unsigned const, BaseType const, BaseType const, BaseType const);
+    void NoiseGate(unsigned const);
 
     // Perform gates
+    void apply1QubitGate(unsigned const, openqu::TinyMatrix<Type, 2, 2, 32>);
     void applyHadamard(unsigned const);
     void applyRotationX(unsigned const, BaseType);
     void applyRotationY(unsigned const, BaseType);
@@ -87,6 +103,43 @@ class NoisyQureg : public QbitRegister<Type> {
 // ----------------------------------------------------------
 // ----------------------------------------------------------
 // ----------------------------------------------------------
+
+/// Reset to zero the time elapsed for each and every qubit in the register.
+template <class Type>
+void NoisyQureg<Type>::reset_time_for_all_qubits()
+{
+  unsigned Nqubits = this->nqbits;
+  // increase the idle time for all the qubits (TODO no gate parallelism is assumed)
+  for (unsigned q = 0; q<Nqubits; q++)
+      TimeFromLastGate[q] = 0. ;
+}
+
+
+/// @brief Apply the noise gates on each and every qubit. Then reset to time counter.
+///
+/// This is useful, for example, at the end of a circuit before measuring the
+/// quantities of interest: One has to apply the noise corresponding to the idle
+/// evolution between the last logical gate and the final time.
+/// The time from last logical gate is then resetted to zero for every qubit.
+template <class Type>
+void NoisyQureg<Type>::apply_noise_gates_on_all_qubits()
+{
+  unsigned Nqubits = this->nqbits;
+  // increase the idle time for all the qubits (TODO no gate parallelism is assumed)
+  for (unsigned q = 0; q<Nqubits; q++)
+      NoiseGate(q);
+  reset_time_for_all_qubits();
+}
+
+
+/// Update the T_1 and T_2 values in accordance to the new noise model.
+template <class Type>
+void NoisyQureg<Type>::update_noise_model(BaseType T1, BaseType T2)
+{
+  T_1 = T1;
+  T_2 = T2;
+}
+
 
 /// Return the current number of (logical) single-qubit gates.
 template <class Type>
@@ -116,9 +169,13 @@ unsigned NoisyQureg<Type>::GetTotalQubitLogicalGateCount()
 template <class Type>
 void NoisyQureg<Type>::AddNoiseOneQubitGate(unsigned const qubit)
 {
+  unsigned Nqubits = this->nqbits;
   // implement the noise gate
   NoiseGate(qubit);
-  // reset the time elapsed from last logical gate
+  // increase the idle time for all the qubits (TODO no gate parallelism is assumed)
+  for (unsigned q = 0; q<Nqubits; q++)
+      TimeFromLastGate[q] += TimeOneQubitLogicalGate ;
+  // reset the time elapsed from last logical gate on the specific qubit
   TimeFromLastGate[qubit]=0.;
   // update counter for (logical) one-qubit gates
   OneQubitLogicalGateCount++;
@@ -129,14 +186,18 @@ void NoisyQureg<Type>::AddNoiseOneQubitGate(unsigned const qubit)
 template <class Type>
 void NoisyQureg<Type>::AddNoiseTwoQubitGate(unsigned const q1, unsigned const q2)
 {
+  unsigned Nqubits = this->nqbits;
   // implement the noise gate
   NoiseGate(q1);
   NoiseGate(q2);
-  // reset the time elapsed from last logical gate
+  // increase the idle time for all the qubits (TODO no gate parallelism is assumed)
+  for (unsigned q = 0; q<Nqubits; q++)
+      TimeFromLastGate[q] += TimeTwoQubitLogicalGate ;
+  // reset the time elapsed from last logical gate on the specific qubits
   TimeFromLastGate[q1]=0.;
   TimeFromLastGate[q2]=0.;
   // update counter for (logical) two-qubit gates
-  TwoQubitGateCount++;
+  TwoQubitLogicalGateCount++;
 }
 
 
@@ -147,8 +208,7 @@ void NoisyQureg<Type>::AddNoiseTwoQubitGate(unsigned const q1, unsigned const q2
 ///  R = | d e f |    -->    u = | c-g |    ---> abs(u) = 2 sin( 'angle' )
 ///      | g h i |               | d-b |    ---> u/abs(u) = rotation axis  
 template <class Type>
-void NoisyQureg<Type>::NoiseGate(unsigned const qubit ,
-                                 BaseType const s_X , BaseType const s_Y , BaseType const s_Z)
+void NoisyQureg<Type>::NoiseGate(unsigned const qubit )
 {
   BaseType t = TimeFromLastGate[qubit] ;
   if (t==0) return;
@@ -156,7 +216,9 @@ void NoisyQureg<Type>::NoiseGate(unsigned const qubit ,
   BaseType p_X , p_Y , p_Z ;
   p_X = (1. - std::exp(-t/T_1) )/4.;
   p_Y = (1. - std::exp(-t/T_1) )/4.;
-  p_Z = (1. - std::exp(-t/T_2) )/2. - (1. - std::exp(-t/T_1) )/4.;
+  p_Z = (1. - std::exp(-t/T_2) )/2. + (1. - std::exp(-t/T_1) )/4.;
+  assert( p_X>0 && p_Y>0 && p_Z>0 );
+
   // computation of the standard deviations for the noise gate parameters
   BaseType s_X , s_Y , s_Z ;
   s_X = std::sqrt( -std::log(1.-p_X) );
@@ -164,10 +226,10 @@ void NoisyQureg<Type>::NoiseGate(unsigned const qubit ,
   s_Z = std::sqrt( -std::log(1.-p_Z) );
 
   // generate angle and direction of Pauli rotation for Pauli-twirld noise channel
-  BaseType = v_X , v_Y , v_Z;
-  v_X = _gaussian(drand48) * s_X /2.;
-  v_Y = _gaussian(drand48) * s_Y /2.;
-  v_Z = _gaussian(drand48) * s_Z /2.;
+  BaseType v_X , v_Y , v_Z;
+  v_X = gaussian_RNG(generator) * s_X /2.;
+  v_Y = gaussian_RNG(generator) * s_Y /2.;
+  v_Z = gaussian_RNG(generator) * s_Z /2.;
 
   // compose the 3-dimensional rotation: R_X(v_X).R_Y(v_Y).R_Z(v_Z)
   //       |  cos Y cos Z                          -cos Y cos Z                           sin Y        |
@@ -187,8 +249,17 @@ void NoisyQureg<Type>::NoiseGate(unsigned const qubit ,
                                     std::cos(v_X) * std::sin(v_Z) +
                                     std::cos(v_Y) * std::cos(v_Z)                   };  
   BaseType norm_u = std::sqrt( std::norm(u[0]) + std::norm(u[1]) + std::norm(u[2]) );
-  std::vector<BaseType> axis = { u[0]/norm_u , u[1]/norm_u , u[2]/norm_u }
-  BaseType angle = std::asin( norm_u/2. );
+  std::vector<BaseType> axis = { u[0]/norm_u , u[1]/norm_u , u[2]/norm_u };
+  // compute the angle of rotation
+  BaseType trace_R =  std::cos(v_X) * std::cos(v_Z)
+                    - std::sin(v_X) * std::sin(v_Y) * std::sin(v_Z)
+                    + std::cos(v_X) * std::cos(v_Z)
+                    + std::cos(v_X) * std::cos(v_Y) ;
+  BaseType angle = std::acos( (trace_R-1.)/2. );
+  if (false) std::cout << " angle of rotation = " << angle << "\n";
+  // FIXME : the Wikipedia formula below is not working! The angles results too large
+  if (false) std::cout << " angle of rotation (wrong formula) = " << std::asin( norm_u/2. ) << "\n";
+
 
   // costruct the 1/2-spin matrix corresponding to the axis above
   //    sigma_axis
@@ -210,6 +281,14 @@ void NoisyQureg<Type>::NoiseGate(unsigned const qubit ,
 // -------- list of modified gates --------------------------
 // ----------------------------------------------------------
 
+
+template <class Type>
+void NoisyQureg<Type>::apply1QubitGate(unsigned const q,
+                                       openqu::TinyMatrix<Type, 2, 2, 32> V)
+{
+  AddNoiseOneQubitGate(q); 
+  QbitRegister<Type>::apply1QubitGate(q,V);
+}
 
 template <class Type>
 void NoisyQureg<Type>::applyHadamard(unsigned const q)

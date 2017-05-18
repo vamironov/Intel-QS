@@ -311,7 +311,7 @@ void QbitRegister<Type>::applyCRotationX(unsigned const control, unsigned const 
 {
   openqu::TinyMatrix<Type, 2, 2, 32> rx;
   rx(0, 1) = rx(1, 0) = Type(0, -std::sin(theta / 2.));
-  rx(0, 0) = rx(1, 1) = std::cos(theta / 2.);
+  rx(0, 0) = rx(1, 1) = Type(std::cos(theta / 2.), 0);
   applyControlled1QubitGate(control, qubit, rx);
 
 }
@@ -322,7 +322,7 @@ void QbitRegister<Type>::applyCRotationY(unsigned const control, unsigned const 
   openqu::TinyMatrix<Type, 2, 2, 32> ry;
   ry(0, 1) = Type(-std::sin(theta / 2.), 0.);
   ry(1, 0) = Type( std::sin(theta / 2.), 0.);
-  ry(0, 0) = ry(1, 1) = std::cos(theta / 2.);
+  ry(0, 0) = ry(1, 1) = Type(std::cos(theta / 2.), 0);
   applyControlled1QubitGate(control, qubit, ry);
 }
 

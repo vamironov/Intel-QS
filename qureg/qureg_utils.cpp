@@ -21,7 +21,14 @@
 
 #include "qureg.hpp"
 
+/// \addtogroup qureg
+/// @{
 
+/// @file qureg_utils.cpp
+///  @brief Define the @c QbitRegister methods used as basic operations.
+
+/// @brief ???
+//------------------------------------------------------------------------------
 template <class Type>
 bool QbitRegister<Type>::operator==(const QbitRegister &rhs)
 {
@@ -36,6 +43,9 @@ bool QbitRegister<Type>::operator==(const QbitRegister &rhs)
   return true;
 }
 
+
+/// @brief ???
+//------------------------------------------------------------------------------
 template <class Type>
 QbitRegister<Type>::BaseType QbitRegister<Type>::maxabsdiff(QbitRegister &x, Type sfactor)
 {
@@ -64,6 +74,9 @@ QbitRegister<Type>::BaseType QbitRegister<Type>::maxabsdiff(QbitRegister &x, Typ
   return glb_maxabsdiff;
 }
 
+
+/// @brief ???
+//------------------------------------------------------------------------------
 template <class Type>
 QbitRegister<Type>::BaseType QbitRegister<Type>::maxl2normdiff(QbitRegister &x)
 {
@@ -93,6 +106,9 @@ QbitRegister<Type>::BaseType QbitRegister<Type>::maxl2normdiff(QbitRegister &x)
   return glb_diff;
 }
 
+
+/// @brief Normalize the quantum state (L2 norm).
+//------------------------------------------------------------------------------
 template <class Type>
 void QbitRegister<Type>::normalize() 
 {
@@ -106,10 +122,11 @@ void QbitRegister<Type>::normalize()
 
 }
 
+/// @brief Compute the norm of the state (L2 norm).
+//------------------------------------------------------------------------------
 template <class Type>
 QbitRegister<Type>::BaseType QbitRegister<Type>::computenorm()
 {
-
   MPI_Comm comm = openqu::mpi::Environment::comm();
   BaseType local_normsq = 0;
   std::size_t lcl = localSize();
@@ -126,9 +143,49 @@ QbitRegister<Type>::BaseType QbitRegister<Type>::computenorm()
   // MPI_Allreduce(&local_normsq, &global_normsq, 1, MPI_DOUBLE, MPI_SUM, comm);
   MPI_Allreduce_x(&local_normsq, &global_normsq,  MPI_SUM, comm);
 
-  return sqrt(global_normsq);
+  return std::sqrt(global_normsq);
 }
 
+
+/// @brief Compute the overlap <psi|this state>
+/// @param psi second state
+///
+/// The overlap between this state and another state |psi\>
+/// is define by:\n
+///     \<psi|this state\>
+//------------------------------------------------------------------------------
+template <class Type>
+Type QbitRegister<Type>::compute_overlap( QbitRegister<Type> &psi)
+{
+  MPI_Comm comm = openqu::mpi::Environment::comm();
+  Type local_over = Type(0.,0.);
+  BaseType local_over_re = 0.;
+  BaseType local_over_im = 0.;
+  std::size_t lcl = localSize();
+#if defined(__ICC) || defined(__INTEL_COMPILER)
+#pragma omp parallel for private(local_over) reduction(+ : local_over_re,local_over_im)
+#else
+   TODO(Remember to find 'omp parallel for simd reduction' equivalent for gcc)
+#endif
+  for(std::size_t i = 0; i < lcl; i++)
+  {
+     local_over = std::conj(psi[i]) * state[i] ; 
+     local_over_re +=  std::real( local_over );
+     local_over_im +=  std::imag( local_over );
+  }
+  
+  BaseType global_over_re(0.) , global_over_im(0.) ;
+  // MPI_Allreduce(&local_over_re, &global_over_re, 1, MPI_DOUBLE, MPI_SUM, comm);
+  // MPI_Allreduce(&local_over_im, &global_over_im, 1, MPI_DOUBLE, MPI_SUM, comm);
+  MPI_Allreduce_x(&local_over_re, &global_over_re,  MPI_SUM, comm);
+  MPI_Allreduce_x(&local_over_im, &global_over_im,  MPI_SUM, comm);
+
+  return Type(global_over_re,global_over_im);
+}
+
+
+/// @brief ???
+//------------------------------------------------------------------------------
 template <class Type>
 double QbitRegister<Type>::entropy()
 {
@@ -168,6 +225,9 @@ double QbitRegister<Type>::entropy()
   return global_Hp / (double)log(double(2.0));
 }
 
+
+/// @brief ???
+//------------------------------------------------------------------------------
 template <class Type>
 std::vector<double> QbitRegister<Type>::googleStats()
 {
@@ -258,6 +318,13 @@ std::vector<double> QbitRegister<Type>::googleStats()
 }
 
 
+/// @brief Compute the overlap-squared with another state.
+/// @param psi second state
+///
+/// The overlap-squared between this state and another state |psi\>
+/// is define dby:\n
+///     |\<psi|this state\>|^2
+//------------------------------------------------------------------------------
 template <class Type, class BaseType>
 std::string printvec(Type *state, std::size_t size, std::size_t nqbits, BaseType &pcum,
                      Permutation *permutation)
@@ -276,9 +343,19 @@ std::string printvec(Type *state, std::size_t size, std::size_t nqbits, BaseType
   return std::string(str);
 }
 
+
+/// @brief Print on screen some information about the state.
+/// @param x message to describe the state to be printed
+///
+/// The information that are printed are:
+/// - permutation map
+/// - all amplitudes of the computational basis
+/// - pcum ???
+//------------------------------------------------------------------------------
 template <class Type>
 void QbitRegister<Type>::Print(std::string x, std::vector<std::size_t> qbits)
 {
+  TODO(Second argument of Print() is not used!)
   BaseType pcum = 0;
   int rank = openqu::mpi::Environment::rank();
   int nprocs = openqu::mpi::Environment::size();
@@ -323,6 +400,9 @@ void QbitRegister<Type>::Print(std::string x, std::vector<std::size_t> qbits)
   openqu::mpi::barrier();
 }
 
+
+/// @brief ???
+//------------------------------------------------------------------------------
 template <class Type>
 void QbitRegister<Type>::dumpbin(std::string fn)
 {
@@ -351,6 +431,8 @@ void QbitRegister<Type>::dumpbin(std::string fn)
 #endif
 }
 
+/// @brief ???
+//------------------------------------------------------------------------------
 template <class Type>
 void QbitRegister<Type>::EnbStat()
 {
@@ -361,6 +443,9 @@ void QbitRegister<Type>::EnbStat()
   timer = new Timer(nqbits, myrank, nprocs);
 }
 
+
+/// @brief ???
+//------------------------------------------------------------------------------
 template <class Type>
 void QbitRegister<Type>::GetStat()
 {
@@ -374,3 +459,4 @@ void QbitRegister<Type>::GetStat()
 template class QbitRegister<ComplexSP>;
 template class QbitRegister<ComplexDP>;
 
+/// @}

@@ -1,40 +1,31 @@
-// AUTHOR: Gian Giacomo Guerreschi
+//------------------------------------------------------------------------------
+// Copyright (C) 2017 Intel Corporation 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//------------------------------------------------------------------------------
 
 /* Test for qHiPSTER:
  * proper implementaiton of the methods to compute the expectation value of Pauli strings
  * on single, two or multiple qubitsi.
  */
 
-#if !defined(STANDALONE)
-#include "openqu/engines/distrwavefunctionsimulator/qHiPSTER_backend/src/qureg.hpp"
-#else
-#include "/home/gian/matsuura_bay-qhipster/qureg/qureg.hpp"
-#endif
-
-// #include "/home/gian/matsuura_bay-qhipster/qureg/qureg.hpp"
+#include "qureg/qureg.hpp"
 
 using namespace std;
-
-#if (defined(__ICC) || defined(__INTEL_COMPILER))
-#include <mkl.h>
-#if defined(OPENQU_HAVE_MPI)
-#include <mkl_cdft.h>
-#endif
-#endif
 
 #include <iostream>	// to use: std::cout, std::cin and std::endl
 #include <iomanip>	// to use: setw() in making tables
 #include <complex>
-//#include <cmath>	// to use: sin(),floor()..
-//#include <cstdlib>	// to use: "system()", but it is better to AVOID such command
-//#include <fstream>	// to write on a file
-//#include <ctime>	// to correctly initialize the seed of the random generator
-//#include <cstdlib>	// for the random generator
-//#include <vector>
-//#include <algorithm>
-//#include <numeric>	// std::inner_prod
-//#include <stdexcept>
-//#include <random>
 
 
 // ------------------------------------------------------------------------------------
