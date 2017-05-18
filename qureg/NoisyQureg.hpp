@@ -46,7 +46,7 @@ class NoisyQureg : public QbitRegister<Type> {
     BaseType T_2 = 100;					// T_2   given in terms of the chosen time unit
     BaseType T_phi = 1./( 1./T_2 - 1./(2.*T_1) );	// T_phi given in terms of the chosen time unit
 
-    // pseudo random-number-generator to sample from normal distribution
+    // Pseudo random-number-generator to sample from normal distribution
     // (for the rotation angles of the noise gates)
     std::default_random_engine generator;
     std::normal_distribution<BaseType> gaussian_RNG{0.,1.} ;
@@ -63,7 +63,7 @@ class NoisyQureg : public QbitRegister<Type> {
       T_2 = T2;
       TimeFromLastGate.assign(Nqubits,0.);
 
-      // initialization of the seed for the generation of the noise gate parameters
+      // Initialization of the seed for the generation of the noise gate parameters
       generator.seed( RNG_seed );
 //      srand48( RNG_seed );
     }
@@ -170,14 +170,14 @@ template <class Type>
 void NoisyQureg<Type>::AddNoiseOneQubitGate(unsigned const qubit)
 {
   unsigned Nqubits = this->nqbits;
-  // implement the noise gate
+  // Implement the noise gate
   NoiseGate(qubit);
-  // increase the idle time for all the qubits (TODO no gate parallelism is assumed)
+  // Increase the idle time for all the qubits (TODO no gate parallelism is assumed)
   for (unsigned q = 0; q<Nqubits; q++)
       TimeFromLastGate[q] += TimeOneQubitLogicalGate ;
-  // reset the time elapsed from last logical gate on the specific qubit
+  // Reset the time elapsed from last logical gate on the specific qubit
   TimeFromLastGate[qubit]=0.;
-  // update counter for (logical) one-qubit gates
+  // Update counter for (logical) one-qubit gates
   OneQubitLogicalGateCount++;
 }
 
@@ -187,16 +187,16 @@ template <class Type>
 void NoisyQureg<Type>::AddNoiseTwoQubitGate(unsigned const q1, unsigned const q2)
 {
   unsigned Nqubits = this->nqbits;
-  // implement the noise gate
+  // Implement the noise gate
   NoiseGate(q1);
   NoiseGate(q2);
-  // increase the idle time for all the qubits (TODO no gate parallelism is assumed)
+  // Increase the idle time for all the qubits (TODO no gate parallelism is assumed)
   for (unsigned q = 0; q<Nqubits; q++)
       TimeFromLastGate[q] += TimeTwoQubitLogicalGate ;
-  // reset the time elapsed from last logical gate on the specific qubits
+  // Reset the time elapsed from last logical gate on the specific qubits
   TimeFromLastGate[q1]=0.;
   TimeFromLastGate[q2]=0.;
-  // update counter for (logical) two-qubit gates
+  // Update counter for (logical) two-qubit gates
   TwoQubitLogicalGateCount++;
 }
 
@@ -219,49 +219,49 @@ void NoisyQureg<Type>::NoiseGate(unsigned const qubit )
   p_Z = (1. - std::exp(-t/T_2) )/2. + (1. - std::exp(-t/T_1) )/4.;
   assert( p_X>0 && p_Y>0 && p_Z>0 );
 
-  // computation of the standard deviations for the noise gate parameters
+  // Computation of the standard deviations for the noise gate parameters
   BaseType s_X , s_Y , s_Z ;
   s_X = std::sqrt( -std::log(1.-p_X) );
   s_Y = std::sqrt( -std::log(1.-p_Y) );
   s_Z = std::sqrt( -std::log(1.-p_Z) );
 
-  // generate angle and direction of Pauli rotation for Pauli-twirld noise channel
+  // Generate angle and direction of Pauli rotation for Pauli-twirld noise channel
   BaseType v_X , v_Y , v_Z;
   v_X = gaussian_RNG(generator) * s_X /2.;
   v_Y = gaussian_RNG(generator) * s_Y /2.;
   v_Z = gaussian_RNG(generator) * s_Z /2.;
 
-  // compose the 3-dimensional rotation: R_X(v_X).R_Y(v_Y).R_Z(v_Z)
-  //       |  cos Y cos Z                          -cos Y cos Z                           sin Y        |
-  //   R = |  sin X sin Y cos Z + cos X sin Z      -sin X sin Y sin Z + cos X cos Z      -sin Z cos Y  |
+  // Compose the 3-dimensional rotation: R_X(v_X).R_Y(v_Y).R_Z(v_Z)
+  //       |  cos Y cos Z                          -cos Y sin Z                           sin Y        |
+  //   R = |  sin X sin Y cos Z + cos X sin Z      -sin X sin Y sin Z + cos X cos Z      -sin X cos Y  |
   //       | -cos X sin Y cos Z + sin X sin Z       cos X sin Y sin Z + sin X cos Z       cos X cos Y  |
   //
-  //       | cos X sin Y sin Z + sin X cos Z + sin Z cos Y |
+  //       | cos X sin Y sin Z + sin X cos Z + sin X cos Y |
   //   u = |    sin Y + cos X sin Y cos Z - sin X sin Z    |
-  //       | sin X sin Y cos Z + cos X sin Z + cos Y cos Z |
+  //       | sin X sin Y cos Z + cos X sin Z + cos Y sin Z |
   std::vector<BaseType> u = { std::cos(v_X) * std::sin(v_Y) * std::sin(v_Z) +
                               std::sin(v_X) * std::cos(v_Z) +
-                              std::sin(v_Z) * std::cos(v_Y),
+                              std::sin(v_X) * std::cos(v_Y),
                                  std::sin(v_Y) +
                                  std::cos(v_X) * std::sin(v_Y) * std::cos(v_Z) -
                                  std::sin(v_X) * std::sin(v_Z),
                                     std::sin(v_X) * std::sin(v_Y) * std::cos(v_Z) +
                                     std::cos(v_X) * std::sin(v_Z) +
-                                    std::cos(v_Y) * std::cos(v_Z)                   };  
+                                    std::cos(v_Y) * std::sin(v_Z)                   };  
   BaseType norm_u = std::sqrt( std::norm(u[0]) + std::norm(u[1]) + std::norm(u[2]) );
   std::vector<BaseType> axis = { u[0]/norm_u , u[1]/norm_u , u[2]/norm_u };
-  // compute the angle of rotation
-  BaseType trace_R =  std::cos(v_X) * std::cos(v_Z)
+  // Compute the angle of rotation
+  BaseType trace_R =  std::cos(v_Y) * std::cos(v_Z)
                     - std::sin(v_X) * std::sin(v_Y) * std::sin(v_Z)
                     + std::cos(v_X) * std::cos(v_Z)
                     + std::cos(v_X) * std::cos(v_Y) ;
   BaseType angle = std::acos( (trace_R-1.)/2. );
   if (false) std::cout << " angle of rotation = " << angle << "\n";
-  // FIXME : the Wikipedia formula below is not working! The angles results too large
-  if (false) std::cout << " angle of rotation (wrong formula) = " << std::asin( norm_u/2. ) << "\n";
+  // Alternative expression for the angle, from Wikipedia.
+  if (false) std::cout << " angle of rotation (alternative formula) = " << std::asin( norm_u/2. ) << "\n";
 
 
-  // costruct the 1/2-spin matrix corresponding to the axis above
+  // Costruct the 1/2-spin matrix corresponding to the axis above
   //    sigma_axis
   // and use it to implement the single-qubit rotation :
   //    rot = exp( i * angle * sigma_axis )
@@ -272,7 +272,7 @@ void NoisyQureg<Type>::NoiseGate(unsigned const qubit )
   rot(0, 1) = Type( -s*axis[1] ,  s*axis[0] );
   rot(1, 1) = Type(  c         , -s*axis[2] );
 
-  // apply the noise gate
+  // Apply the noise gate
   QbitRegister<Type>::apply1QubitGate(qubit,rot);
 }
 
