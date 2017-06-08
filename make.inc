@@ -16,21 +16,10 @@
 
 HOST = $(shell hostname)
 
-ifneq ($(HOST),ccefw-desktop)
 CC = g++
 CC = CC -mkl -no-ipo
 CC = mpicxx
 CC = mpiicpc 
-else
-########### Modified for the ccefw-desktop.jf.intel.com environment ############
-CC = g++
-CC = /opt/intel/impi/2017.2.174/bin64/mpicxx
-CC = CC -mkl -no-ipo
-CC = /opt/intel/impi/2017.2.174/bin64/mpiicpc
-PATH := ${PATH}:/opt/intel/bin
-################################################################################
-endif
-
 
 OPTS = -g
 OPTS = -O3
@@ -38,26 +27,36 @@ VECS = -qopt-report-phase=vec -qopt-report=2
 DEFS = -DUSE_MM_MALLOC -DSTANDALONE -DOPENQU_HAVE_MPI -DMKL_ILP64
 
 CFLAGS = ${OPTS} ${DEFS} \
-         -Wall -std=c++11 -openmp #-restrict \
+         -Wall -std=c++11 -qopenmp #-restrict \
 # -fasm-blocks
 
 CFLAGS += ${OPTFLAGS}  
 
-ifneq ($(HOST),ccefw-desktop)
 INC = -I./ -I../
-else
-########### Modifications to find performance libraries on ccefw-desktop. ######
-INC = -I./ -I../ -I/opt/intel/mkl/include/
-MKLROOT = /opt/intel/mkl/
-################################################################################
+
+
+########### Modified for the ccefw-desktop.jf.intel.com environment ############
+ifeq ($(HOST),ccefw-desktop)
+ CC = g++
+ CC = /opt/intel/impi/2017.2.174/bin64/mpicxx
+ CC = CC -mkl -no-ipo
+ CC = /opt/intel/impi/2017.2.174/bin64/mpiicpc
+ PATH := ${PATH}:/opt/intel/bin
+ INC = -I./ -I../ -I/opt/intel/mkl/include/
+ MKLROOT = /opt/intel/mkl/
 endif
+################################################################################
 
 
 ########### added by Gian for PCL mini-cluster #################################
 ifeq ($(HOST),pcl-hsw1.sc.intel.com)
-PATH := ${PATH}:/swtools/intel/bin
-INC += -I/home/gian/matsuura_bay-qhipster -I/swtools/intel/mkl/include/
-MKLROOT = /swtools/intel/mkl/
+ PATH := ${PATH}:/swtools/intel/bin
+ INC += -I/home/gian/matsuura_bay-qhipster -I/swtools/intel/mkl/include/
+ MKLROOT = /swtools/intel/mkl/
+else ifeq ($(HOST),ssr-nfs1.sc.intel.com)
+ PATH := ${PATH}:/swtools/intel/bin
+ INC += -I/nfs_home/giangiac/matsuura_bay-qhipster -I/swtools/intel/mkl/include/
+ MKLROOT = /swtools/intel/mkl/
 endif
 ################################################################################
 
