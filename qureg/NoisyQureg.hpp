@@ -14,6 +14,7 @@
 // limitations under the License.
 //------------------------------------------------------------------------------
 #include <vector>
+#include <random>
 
 /// \addtogroup NoisyQureg
 /// @{
