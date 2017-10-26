@@ -133,8 +133,8 @@ openqu::mpi::Environment::Environment(int& argc, char**& argv) : inited_(false)
 //  std::string aff = openqu::openmp::init(0);
 //  int threads_per_rank = openqu::openmp::omp_get_set_num_threads();
 
-  glb_affinity.set_thread_affinity(2);
   int threads_per_rank = glb_affinity.get_num_threads();
+  glb_affinity.set_thread_affinity(threads_per_rank);
   std::string aff_str = glb_affinity.get_affinity_string();
 
   std::stringstream buffer;
