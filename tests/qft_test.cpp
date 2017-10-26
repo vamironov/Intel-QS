@@ -137,6 +137,7 @@ int main(int argc, char **argv)
   if (myid == 0)
     printf("SP::qufft error vs classical max(absdiff: %le l2normdiff: %le)\n", e1, e2);
   }
+#if 0
   {
   using Type = ComplexDP;
   QbitRegister<Type> psi1(nqbits, "rand", 0), psi2(psi1);
@@ -150,6 +151,7 @@ int main(int argc, char **argv)
   if (myid == 0)
     printf("DP::qufft error vs classical max(absdiff: %le l2normdiff: %le)\n", e1, e2);
   }
+#endif
              
   return 0;
 
