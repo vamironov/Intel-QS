@@ -13,6 +13,7 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 ##------------------------------------------------------------------------------
+#bigmpi = 1
 
 HOST = $(shell hostname)
 
@@ -22,9 +23,12 @@ CC = mpicxx
 CC = mpiicpc 
 
 OPTS = -g
-OPTS = -O3
+OPTS = -g -O3 -no-ipo
 VECS = -qopt-report-phase=vec -qopt-report=2
 DEFS = -DUSE_MM_MALLOC -DSTANDALONE -DOPENQU_HAVE_MPI -DMKL_ILP64
+
+BIGMPI_LIB = /opt/bigmpi/lib/libbigmpi.a
+BIGMPI_INC = -I/opt/bigmpi/include
 
 CFLAGS = ${OPTS} ${DEFS} \
          -Wall -std=c++11 -qopenmp #-restrict \
@@ -34,6 +38,10 @@ CFLAGS += ${OPTFLAGS}
 
 INC = -I./ -I../
 
+ifdef bigmpi
+ DEFS := ${DEFS} -DBIGMPI
+ INC := ${INC} ${BIGMPI_INC}
+endif
 
 ########### Modified for the ccefw-desktop.jf.intel.com environment ############
 ifeq ($(HOST),ccefw-desktop)
