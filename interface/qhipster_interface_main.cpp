@@ -19,6 +19,11 @@
 #include <functional>
 #include <stdexcept>
 
+#ifdef OPENQU_HAVE_MPI
+#include "util/mpi.hpp"
+#endif
+#include <cstring>
+
 #include "qureg/qureg.hpp"
 #include "interface_api_qasm.h"
 
@@ -36,7 +41,9 @@ int main(int argc, char*argv[]) {
     openqu::mpi::Environment env(argc, argv);
     string line = "";
     string token = "";
-
+#ifdef OPENQU_HAVE_MPI
+    char buf[1000];
+#endif
     if (env.is_usefull_rank() == false) 
         return 0;
 
@@ -44,7 +51,15 @@ int main(int argc, char*argv[]) {
     using Type = ComplexDP;
 
     while(true) {
-        getline(cin,line);
+        if (!myid) {
+            getline(cin,line);
+        }
+
+#ifdef OPENQU_HAVE_MPI
+        std::strcpy(buf,line.c_str());
+        MPI_Bcast(buf, sizeof(buf)/sizeof(char), MPI_CHAR, 0, env.comm());
+        line = buf;
+#endif
 
         if(line.length() >= 1) {
             int token_end = line.find_first_of(' ');
